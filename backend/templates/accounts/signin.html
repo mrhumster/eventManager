@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+{% else %}
+<div class="d-flex flex-column" style="width: 100%;">
+    <div class="card ms-auto me-auto mt-5 pb-4 mb-auto shadow" style="width: 40rem;">
+        <div class="row g-0">
+            <div class="col-md text-center">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <h2 class="card-text fw-light mt-3 mb-4">Регистрация</h2>
+                        {% bootstrap_field form.username show_label=False %}
+                        {% bootstrap_field form.first_name show_label=False %}
+                        {% bootstrap_field form.last_name show_label=False %}
+                        {% bootstrap_field form.password show_label=False %}
+                        {% bootstrap_field form.password2 show_label=False %}
+                        {% bootstrap_field form.email show_label=False %}
+                        {% bootstrap_field form.group show_label=False %}
+
+                        <div class="row">
+                            <div class="btn-group btn-group-sm pt-3 px-5">
+                                <input value="user" type="radio" class="btn-check" name="group" id="option1" autocomplete="off" checked />
+                                <label class="btn btn-outline-primary" for="option1"><i class="bi bi-person-fill  ps-2 pe-1"></i>Посетитель</label>
+
+                                <input value="staff" type="radio" class="btn-check" name="group" id="option2" autocomplete="off" />
+                                <label class="btn btn-outline-primary" for="option2"><i class="bi bi-wrench-adjustable-circle ps-2 pe-1"></i>Организатор</label>
+                            </div>
+                        </div>
+                    </div>
+                        {% buttons %}
+                            <div class="d-grid gap-2 pt-2 col-6 mx-auto">
+                                <button id="id_signin" type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-person-plus-fill pe-2"></i>Зарегистрироваться</button>
+                            </div>
+                        {% endbuttons %}
+                </form>
+              <span class="fw-light pb-5"> Перейти на <a href="{% url 'accounts:index' %}" class="link-primary text-decoration-none">страницу авторизации</a></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

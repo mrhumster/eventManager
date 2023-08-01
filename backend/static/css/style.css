@@ -1,0 +1,481 @@
+#app {
+    width: 100%;
+
+
+}
+
+html, body {
+    height: 100%;
+}
+
+.fill {
+    min-height: 100%;
+}
+
+main {
+    display: flex;
+    flex-wrap: nowrap;
+    height: calc(100vh - 56px);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #00000069;
+    -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+}
+
+.button-100 {
+    width: 100px !important;
+}
+.logo {
+    font-family: 'Play', sans-serif;
+}
+
+.alert-fixed {
+    position:fixed;
+    bottom: 0px;
+    right: 50px;
+    width: 40rem;
+    z-index:9999;
+    border-radius:0px
+}
+
+.blink_me {
+  animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+li::marker {
+  content: attr(data-emoji);
+}
+
+.position, .phone-type {
+    font-size: small;
+    margin-bottom: 0;
+    padding-left: 5px;
+    text-transform: capitalize;
+}
+
+.name, .number {
+    font-size: medium;
+    margin-bottom: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.dep {
+    display: inline;
+}
+
+.departament {
+    border-bottom: 1px solid grey;
+}
+
+#selected {
+    width: 100%;
+}
+
+.level-0 {
+    padding-left: 0px;
+}
+
+.level-1 {
+    padding-left: 20px;
+}
+
+.level-2 {
+    padding-left: 40px;
+}
+.level-3 {
+    padding-left: 60px;
+}
+.level-4 {
+    padding-left: 80px;
+}
+load-departament {
+    display: inline;
+}
+.tree_icon, .tree_desc {
+    display: inline;
+}
+
+.person_short:hover, .load_departament:hover, .phone:hover {
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.today_cell {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 2px solid red;
+    cursor: pointer;
+}
+
+.simple_cell {
+    cursor: pointer;
+}
+
+.extended_cell {
+    min-width: 5rem;
+    height: 100%;
+    cursor: pointer;
+    padding: 1px;
+}
+
+.extended_table {
+    table-layout:fixed;
+}
+
+td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+tr {
+    max-height: 30px;
+}
+
+thead {
+    height: 10px;
+}
+
+td.container > div {
+    width: 100%;
+    height: 100%;
+    overflow:hidden;
+}
+td.container {
+    height: 120px;
+}
+
+.modal_window {
+    position: fixed;
+}
+
+.event_calendar_market, .event_members_marker {
+    width: 30px;
+}
+
+.e1 {
+    position: absolute;
+    width: 30%;
+    cursor: pointer;
+}
+
+.event_container {
+    height: 25px;
+    width: 100%;
+}
+
+.time_cursor {
+    position: absolute;
+    border-top: 1px solid red;
+    left: 0px;
+    width: 100%;
+    padding-right: 5px;
+}
+
+.full_day {
+    --bs-bg-opacity: .4;
+    --bs-primary-rgb: 13,110,253;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: pointer;
+    background: rgba(var(--bs-primary-rgb),var(--bs-bg-opacity))!important;
+}
+
+.left {
+    position: relative;
+    right: 0px;
+    padding-left: 5px;
+}
+
+.left::before {
+
+    content: "";
+    position: absolute;
+    left: -8px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-right: 8px solid rgba(var(--bs-primary-rgb),var(--bs-bg-opacity))!important;
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+}
+
+.right {
+    position: relative;
+    left: 0px;
+    padding-right: 5px;
+}
+
+.right::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 8px solid rgba(var(--bs-primary-rgb),var(--bs-bg-opacity))!important;;
+    border-top: 16px solid transparent;
+    border-bottom: 16px solid transparent;
+}
+
+.modal {
+    width: 30rem;
+}
+
+input::invalid {
+    background: red;
+}
+
+#currentDateSelect {
+    color: #ffc107;
+    border-color: #ffc107;
+    color-scheme: dark;
+    width: 10rem;
+}
+
+.fullDay {
+    border-radius: 3px;
+    margin: 1px;
+    font-size: smaller;
+
+}
+
+.withinOneDay {
+    font-size: smaller;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.withinOneDay::before {
+    content: '∘';
+    margin-right: 4px;
+}
+
+.cy {
+    width: 100%;
+    height: 100%;
+}
+
+#container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+}
+
+.context-menu {
+  display: none;
+  position: absolute;
+  z-index: 100;
+}
+
+.context-menu--active {
+  display: block;
+}
+
+#right_panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+#direction_banner {
+  position: absolute;
+  top: 10px;
+  left: auto;
+  right: auto;
+  z-index: 2;
+}
+
+.list-group-item-action {
+  cursor: pointer;
+}
+
+.direction_list_item {
+  cursor: pointer;
+}
+
+.direction_list_item:hover {
+  font-weight: 900;
+}
+
+.notShow {
+  display: none;
+}
+
+.bg-opacity {
+  --bs-bg-opacity: 1;
+  background-color: rgba(var(--bs-success-rgb), var(--bs-bg-opacity)) !important;
+}
+
+#direction_header {
+  cursor: pointer;
+}
+
+#legend {
+  position: absolute;
+  bottom: 20px;
+  left: auto;
+  right: 10px;
+  z-index: 2;
+  width: 400px;
+
+}
+
+#big_spinner {
+  position: absolute;
+  z-index: 2;
+  top: 45%;
+  right: 45%;
+  display: none;
+}
+
+
+.filter-black {
+  filter: invert(16%) sepia(11%) saturate(1073%) hue-rotate(183deg) brightness(93%) contrast(88%);
+}
+
+.filter-red {
+  filter: invert(32%) sepia(15%) saturate(5045%) hue-rotate(311deg) brightness(106%) contrast(91%)
+}
+
+.filter-green {
+  filter: invert(56%) sepia(5%) saturate(4305%) hue-rotate(42deg) brightness(98%) contrast(66%);
+}
+
+.filter-yellow {
+  filter: invert(91%) sepia(27%) saturate(600%) hue-rotate(356deg) brightness(96%) contrast(91%);
+}
+
+.filter-orange {
+  filter: invert(79%) sepia(88%) saturate(5799%) hue-rotate(308deg) brightness(100%) contrast(104%);
+}
+
+.filter-pink {
+  filter: invert(14%) sepia(97%) saturate(4335%) hue-rotate(300deg) brightness(93%) contrast(111%);
+}
+
+.filter-dark-moderate-pink {
+  filter: invert(21%) sepia(45%) saturate(2169%) hue-rotate(302deg) brightness(94%) contrast(88%);
+}
+
+.filter-dark-cyan-lime-green {
+  filter: invert(42%) sepia(78%) saturate(1778%) hue-rotate(134deg) brightness(91%) contrast(97%);
+}
+
+.filter-vivid-orange {
+  filter: invert(48%) sepia(84%) saturate(3710%) hue-rotate(358deg) brightness(97%) contrast(101%);
+}
+
+.filter-first {
+  filter: invert(65%) sepia(99%) saturate(476%) hue-rotate(162deg) brightness(99%) contrast(90%);
+}
+
+.filter-second {
+  filter: invert(54%) sepia(62%) saturate(2648%) hue-rotate(191deg) brightness(98%) contrast(90%);
+}
+
+.filter-third {
+  filter: invert(29%) sepia(86%) saturate(2428%) hue-rotate(223deg) brightness(96%) contrast(94%);
+}
+
+.filter-fourth {
+  filter: invert(18%) sepia(90%) saturate(2330%) hue-rotate(236deg) brightness(99%) contrast(97%);
+}
+
+.filter-fifth {
+  filter: invert(12%) sepia(93%) saturate(6704%) hue-rotate(262deg) brightness(63%) contrast(107%);
+}
+
+.filter-sixth {
+  filter: invert(13%) sepia(94%) saturate(7160%) hue-rotate(267deg) brightness(65%) contrast(106%);
+}
+
+.filter-seventh {
+  filter: invert(14%) sepia(91%) saturate(5308%) hue-rotate(269deg) brightness(67%) contrast(109%);
+}
+
+.filter-eighth {
+  filter: invert(11%) sepia(80%) saturate(5191%) hue-rotate(275deg) brightness(96%) contrast(110%);
+}
+
+.filter-ninth {
+  filter: invert(18%) sepia(100%) saturate(2974%) hue-rotate(295deg) brightness(81%) contrast(98%);
+}
+
+.filter-tenth {
+  filter: invert(41%) sepia(86%) saturate(6423%) hue-rotate(317deg) brightness(99%) contrast(96%);
+}
+
+.filter-shortest {
+  filter: invert(60%) sepia(20%) saturate(578%) hue-rotate(112deg) brightness(89%) contrast(89%);
+}
+
+.filter-primary {
+  filter: invert(76%) sepia(25%) saturate(1035%) hue-rotate(354deg) brightness(104%) contrast(103%);
+}
+
+.filter-secondary {
+  filter: invert(53%) sepia(65%) saturate(641%) hue-rotate(335deg) brightness(101%) contrast(102%);
+}
+
+.custom-tooltip {
+  --bs-tooltip-bg: var(--bs-primary);
+}
+
+
+.route_list_item {
+  background-color: rgba(108,117,125,0.5);
+}
+
+#add-person {
+    position: absolute;
+    top: 200px;
+    left: 30%;
+    z-index: 100;
+}
+
+.card-button {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    width: 100%;
+    background-color: #1F487E;
+    color: #fff;
+    border-radius: 0 0 6px 6px;
+    text-decoration: none;
+}
+
+.card-button:hover {
+    text-decoration: none;
+    background-color: #1D3461;
+    color: #fff;
+}
+
+.card-code {
+    font-family: "Bitstream Vera Sans Mono", Monaco, "Courier New", Courier, monospace;
+    padding: 0 10px 0 10px;
+    font-size: 12px;
+}

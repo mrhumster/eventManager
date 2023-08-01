@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap5 %}
+{% block title %}Авторизация{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex flex-column align-items-center px-3 pb-5 overflow-auto" style="width: 100%;">
+  <!--CONTENT -->
+</div>
+{% else %}
+<div class="d-flex flex-column" style="width: 100%;">
+    <div class="card ms-auto me-auto mt-5 mb-auto shadow" style="width: 30rem; --bs-bg-opacity: .1;">
+        <div class="row g-0">
+
+            <div class="col-md text-center">
+                <h2 class="card-text fw-light my-5">Авторизация</h2>
+                <form method="post" novalidate>
+                {% csrf_token %}
+                <div class="card-body text-center">
+                  {% bootstrap_field form.username show_label=False %}
+                  {% bootstrap_field form.password show_label=False %}
+                  {% buttons %}
+                  <div class="d-grid gap-1 pt-4">
+                    <button id="id_login" type="submit" class="btn btn-outline-primary btn-sm mx-5"><i class="bi bi-door-open pe-2"></i>Войти</button>
+                  </div>
+                {% endbuttons %}
+                      <div class="d-grid gap-1">
+                        <a href="{% url 'accounts:signin' %}" class="btn btn-sm btn-outline-secondary mx-5"><i class="bi bi-person-plus pe-2"></i>Зарегистрироваться</a>
+                      </div>
+                    <div class="card-text mt-3">
+                        <a href="{% url 'accounts:forgot-password' %}" class="link-primary  px-3 mt-auto"></i>Забыл пароль</a>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/codehilite_styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="{% static 'css/css2.css' %}" type="text/css">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'js/run_prettify.js' %}"></script>
+    <script src="{% static 'js/vue.global.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg  bg-dark text-white" data-bs-theme="dark" style="height: 56px;">
+    <div class="container-md d-flex">
+      <a class="navbar-brand text-light fw-light" id="brand" href="#"><i class="bi bi-mortarboard-fill pe-2"></i>Газпром ВНИИГаз - Event Manager</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      {% if user.is_authenticated %}
+      <div class="collapse navbar-collapse text-warning ms-5" id="navbarNavDropdown">
+        <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
+          <!--<li class="nav-item col-6 col-lg-auto">
+            <a class="nav-link link-light" href="#"><i class="bi bi-journal-bookmark"></i></a>
+            </a>
+          </li>
+          <li class="nav-item col-6 col-lg-auto">
+            <a class="nav-link link-light" href="#"><i class="bi bi-calendar3"></i></a>
+            </a>
+          </li>
+           <li class="nav-item col-6 col-lg-auto">
+            <a class="nav-link link-light" href="#"><i class="bi bi-award"></i></a>
+            </a>
+          </li> -->
+        </ul>
+        <div class="flex-fill">
+
+        </div>
+
+        <div class="d-flex align-items-end">
+          <div class="nav-item dropdown col-6 col-lg-auto ms-md-auto">
+            <a href="#" class="btn btn-sm btn-outline-primary dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ user.first_name }} {{ user.last_name }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownUser1">
+              <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person-lines-fill pe-2"></i>Профиль</a></li>
+                  {% if user.is_superuser %}
+                    <li><a class="dropdown-item" href="/admin"><i class="bi bi-hammer pe-2"></i>Админка</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="{% url 'accounts:settings' %}"><i class="bi bi-gear pe-2"></i>Настройки</a></li>
+                <li><hr class="dropdown-divider"></li>
+              <li class="d-grid gap-2"><a class="btn btn-sm btn-primary mx-2" id="id_exit_button" href="{% url 'accounts:logout' %}"><i class="bi bi-door-open pe-2"></i>Выйти</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    {%  endif %}
+    </div>
+    </nav>
+    <main id="app" class="d-flex p-0 bg-dark" style="--bs-bg-opacity: .9">
+        {% block content %}
+        {% endblock %}
+    </main>
+    <div class="position-relative" style="z-index:1000">
+        <div class="fs-2 pb-2 pe-4 position-absolute bottom-0 end-0">
+            <a href="https://t.me/XOMRKOB" class="link-light"
+               data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 data-bs-html="true"
+                 data-bs-title="@<b>XOMRKOB</b>"><i class="bi bi-telegram"></i></a>
+            <a href="https://github.com/mrhumster/nii-base" class="link-light"
+               data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 data-bs-html="true"
+                 data-bs-title="@<b>mrhumster</b>"><i class="bi bi-github"></i></a>
+        </div>
+    </div>
+    <div class="alert-fixed">
+        {% load i18n bootstrap5 %}
+        {% for message in messages %}
+        <div class="{{ message|bootstrap_message_classes }} alert-dismissible fade show" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'close' %}"></button>
+                <div class="{{ message.tags }}">
+                    {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+<script>
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+Element.prototype.hasClass = function(className) {
+    return this.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(this.className);
+};
+
+const INFO = 'info'
+const WARNING = 'warning'
+const SUCCESS = 'success'
+const ERROR = 'danger'
+const DEBUG = 'dark'
+
+function createMessage(level, text) {
+  // Вспомогательная функция для подсистемы сообщений django messages
+  let body_message = document.createElement('div')
+  body_message.className = `alert alert-${level} alert-dismissible fade show`
+  body_message.role = 'alert'
+
+  let close_button = document.createElement('button')
+  close_button.type = 'button'
+  close_button.className = 'btn-close'
+  close_button.setAttribute('data-bs-dismiss', 'alert')
+  close_button.setAttribute('aria-label', 'close')
+
+  let message = document.createElement('div')
+  message.className = level
+  message.innerHTML = text
+
+  body_message.appendChild(close_button)
+  body_message.appendChild(message)
+
+  const messages = document.getElementsByClassName('alert-fixed')
+  messages[0].appendChild(body_message)
+}
+</script>
+{% block script %}
+{% endblock %}

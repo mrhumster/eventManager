@@ -1,0 +1,8 @@
+celery
+django-celery-beat
+django-celery-results
+django-bootstrap-v5
+gunicorn
+psycopg2-binary
+Django~=4.2.3
+Markdown

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load markdown_extras %}
+{% load tag_extras %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}{{ user.first_name }} {{ user.last_name }}{% endblock %}
+{% block content %}
+<div class="d-flex flex-column align-items-center px-3 pb-5 overflow-auto" style="width: 100%;">
+    <div class="card mt-5 shadow" style="width: 60rem;">
+        <div class="card-header border-none bg-warning" style="background-image:url('/static/img/6vcr-2.png'); height: 300px;">
+            <h5 class="card-title text-light pt-5 ps-4">{{ user.first_name }} {{ user.last_name }}</h5>
+            <a class="link-light text-decoration-none ps-4" href="mailto:{{ user.email }}"><i class="bi bi-envelope pe-1"></i> {{ user.email }}</a>
+                <div class="card-text">
+                    {% if user.is_superuser %}
+                        <small class="text-light ps-4"># administrator</small>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <small class="text-light ps-4"># staff</small>
+                    {% endif %}
+                </div>
+                <div class="card-text ps-4">
+                    {% for group in user.groups.all %}
+                        <span class="badge bg-warning my-3">{{ group }}</span>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="card-body">
+            {% if user.task_set.all %}
+                <h5 class="card-title"><i class="bi bi-journal-plus pe-1"></i>Созданные обращения</h5>
+                {% for task in user.task_set.all %}
+                    {% if task.stage != 'DELETED' %}
+                    <a class="nav-link link-secondary" href="{{ task.get_absolute_url }}"><i class="bi bi-journal-text text-dark pe-1"></i> {{ task }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if user.stage_owner_set.all %}
+                <h5 class="card-title"><i class="bi bi-hourglass-split pe-1"></i>Обращения в работе</h5>
+                {% for task in user.stage_owner_set.all %}
+                    {% if task.stage == 'PUBLISHED' %}
+                    <a class="nav-link link-secondary" href="{{ task.get_absolute_url }}"><i class="bi bi-journal-text text-dark pe-1"></i> {{ task }}</a>
+                    {% endif %}
+                {% endfor %}
+            <hr class="border">
+                <h5 class="card-title"><i class="bi bi-bookmark-check-fill pe-1"></i>Обращения закрытые пользователем</h5>
+                {% for task in user.stage_owner_set.all %}
+                    {% if task.stage == 'CLOSED' %}
+                    <a class="nav-link link-secondary" href="{{ task.get_absolute_url }}"><i class="bi bi-journal-text text-dark pe-1"></i> {{ task }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if user.attach_set.all %}
+            <hr class="border">
+                <h5 class="card-title"><i class="bi bi-folder2-open pe-1"></i>Файлы загруженные пользователем</h5>
+                {% for attach in user.attach_set.all %}
+                    <a class="nav-link" href="{{ attach.get_absolute_url }}">
+                        {% if attach.ext == 'log' %}
+                            <i class="bi bi-file-earmark text-dark"></i>
+                        {% else %}
+                            <i class="bi bi-filetype-{{ attach.ext }} text-dark pe-1 "></i>
+                        {% endif %}
+                        {{ attach.filename }}
+                        <small class="text-muted">{{ attach.size | humanize }}</small>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

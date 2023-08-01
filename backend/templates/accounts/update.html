@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Профиль {{ user.username }}{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="d-flex flex-column align-items-center px-3 pb-5 overflow-auto" style="width: 100%;">
+    <div class="card mt-5 shadow" style="width: 40rem;">
+        <div class="card-header pb-3">
+            <h5 class="card-title pt-3 ps-3"><a class="btn-link link-secondary text-decoration-none"  href="{% url 'accounts:user_profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a></h5>
+                <div class="card-text ps-3">
+                    {% if user.is_superuser %}
+                        <small class="badge bg-secondary"># administrator</small>
+                    {% endif %}
+                    {% if user.is_staff %}
+                        <small class="badge bg-secondary"># staff</small>
+                    {% endif %}
+                </div>
+                <div class="card-text ps-4">
+                    {% for group in user.groups.all %}
+                        <span class="badge bg-warning my-3">{{ group }}</span>
+                    {% endfor %}
+                </div>
+        </div>
+        <form method="post" novalidate>  {% csrf_token %}
+        <div class="card-body text-center">
+                    <!-- BOOTSTRAP FORM -->
+            <div class="input-group mb-3"
+                 data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 data-bs-html="true"
+                 data-bs-title="<b>username</b>: имя пользователя для входа">
+                <span class="input-group-text" id="username_addon"><i class="bi bi-at"></i></span>
+                <input
+                       type="text"
+                       name="username"
+                       value="{{ user.username }}"
+                       maxlength="30"
+                       class="form-control {% if form.errors.username %} is-invalid {% endif %}"
+                       required=""
+                       id="id_username"
+                       aria-label="Username"
+                       aria-describedby="username_addon"
+                >
+                {% for error in form.errors.username %}
+                <div class="invalid-feedback pb-3">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+
+            <div class="input-group mb-3"
+                 data-bs-toggle="tooltip"
+                 data-bs-placement="top"
+                 data-bs-html="true"
+                 data-bs-title="<b>email</b>: адрес электронной почты">
+                <span class="input-group-text" id="email_addon">
+                    {% if user.settings.get.verified_email %}
+                    <i class="bi bi-envelope-check"></i>
+                    {% else %}
+                    <i class="bi bi-envelope"></i>
+                    {% endif %}
+                </span>
+                <input
+                       type="email"
+                       name="email"
+                       value="{{ user.email }}"
+                       maxlength="254"
+                       class="form-control {% if form.errors.email %} is-invalid {% endif %}"
+                       placeholder="Email"
+                       required=""
+                       id="id_email"
+                       aria-label="Email"
+                       aria-describedby="email_addon"
+                >
+                {% for error in form.errors.email %}
+                <div class="invalid-feedback pb-3">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="first_name_addon"><i class="bi bi-person-lines-fill"></i></span>
+                <input
+                       type="text"
+                       name="first_name"
+                       value="{{ user.first_name }}"
+                       maxlength="128"
+                       class="form-control"
+                       placeholder="First name"
+                       required=""
+                       id="id_first_name"
+                       aria-label="First name"
+                       aria-describedby="first_name_addon"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="top"
+                       data-bs-html="true"
+                       data-bs-title="<b>first_name</b>: Имя"
+                >
+
+                <input
+                       type="text"
+                       name="last_name"
+                       value="{{ user.last_name }}"
+                       maxlength="128"
+                       class="form-control"
+                       placeholder="Last name"
+                       required=""
+                       id="id_last_name"
+                       aria-label="Last name"
+                       aria-describedby="last_name_addon"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="top"
+                       data-bs-html="true"
+                       data-bs-title="<b>last_name</b>: Фамилия"
+                >
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            {% buttons %}
+            <button id="id_save" type="submit" class="btn btn-outline-success mt-2"><i class="bi bi-check-circle pe-2"></i>Сохранить</button>
+            {% endbuttons %}
+        </div>
+        </form>
+    </div>
+</div>
+{% else %}
+{% endif %}
+{% endblock %}

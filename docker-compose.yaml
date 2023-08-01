@@ -1,0 +1,71 @@
+version: "3.3"
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - event-db:/var/lib/postgresql/data
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    env_file:
+      - .env
+    expose:
+      - "5432"
+  backend:
+    build: ./backend
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py initadmin && /usr/local/bin/gunicorn -c gunicorn.conf.py eventManager.wsgi:application"
+    volumes:
+      - ./backend:/backend
+      - ./logs:/var/log/django/
+      - static:/static/
+      - media:/backend/media/
+    expose:
+      - "8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+  worker:
+    build: ./backend
+    hostname: worker
+    command: celery -A eventManager worker -l INFO
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - rabbit
+    volumes:
+      - ./logs/:/var/log/django/
+      - media:/backend/media/
+  rabbit:
+    hostname: rabbit
+    image: rabbitmq:3-management
+    env_file:
+      - .env
+    expose:
+      - "5672"
+  nginx:
+    restart: always
+    build: ./nginx/
+    volumes:
+      - static:/static/
+      - ./nginx/ssl/key.pem:/root/ssl/key.pem
+      - ./nginx/ssl/cert.pem:/root/ssl/cert.pem
+    ports:
+      - protocol: tcp
+        published: 443
+        target: 443
+        mode: host
+      - protocol: tcp
+        published: 80
+        target: 80
+        mode: host
+    links:
+      - "backend:backend"
+    depends_on:
+      - backend
+volumes:
+  event-db:
+    driver: local
+  static:
+  media:
+
