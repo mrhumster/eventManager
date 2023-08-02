@@ -14,13 +14,10 @@
                     {% if user.is_superuser %}
                         <small class="badge bg-secondary"># administrator</small>
                     {% endif %}
-                    {% if user.is_staff %}
-                        <small class="badge bg-secondary"># staff</small>
-                    {% endif %}
                 </div>
-                <div class="card-text ps-4">
+                <div class="card-text ps-3">
                     {% for group in user.groups.all %}
-                        <span class="badge bg-warning my-3">{{ group }}</span>
+                        <span class="badge bg-secondary">{{ group }}</span>
                     {% endfor %}
                 </div>
         </div>

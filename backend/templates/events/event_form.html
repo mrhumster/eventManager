@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+{% endblock %}
+{% block title %}Новое мероприятие{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-column align-items-center mx-auto" style="width: 80rem; overflow-y: auto">
+    <div class="card mt-3 mb-5 shadow" style="width: 100%">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="card-header mt-3">
+          {% bootstrap_field form.title show_label=False %}
+        </div>
+        <div class="card-body">
+          {% bootstrap_field form.description show_label=False %}
+          <div class="row">
+            <div class="col-3">
+              {% bootstrap_field form.start_time show_label=True %}
+              {% bootstrap_field form.start_date show_label=False %}
+            </div>
+            <div class="col-3">
+              {% bootstrap_field form.end_time show_label=True %}
+              {% bootstrap_field form.end_date show_label=False %}
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          {% buttons %}
+            <button type="submit" class="btn btn-outline-success mt-2"><i class="bi bi-bookmark-star pe-1"></i>Сохранить</button>
+          {% endbuttons %}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+<script>
+var simplemde = new SimpleMDE({ element: document.getElementById("id_description"), spellChecker: false });
+</script>
+{% endblock %}

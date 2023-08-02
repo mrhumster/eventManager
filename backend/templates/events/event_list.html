@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Список мероприятий{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-3 pt-5" style="width: 80rem; height: 80% ">
+  <div id="carouselEvents" class="carousel carousel-dark slide pt-5">
+    <div class="carousel-indicators">
+      {% for event in events %}
+        <button type="button"
+                data-bs-target="#carouselEvents"
+                data-bs-slide-to="{{ forloop.counter0 }}"
+                aria-current="true"
+                aria-label="{{ event.title }}"
+                {% if forloop.counter0 == 0 %}
+                  class="active"
+                {% endif %}
+        >
+        </button>
+      {% endfor %}
+    </div>
+    <div class="carousel-inner">
+      {% for event in events %}
+        <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+          <a href="{% url 'events:event-detail' event.pk %}"><img src="{% static 'img/event.png' %}" class="d-block w-100" alt="..."></a>
+          <div class="carousel-caption d-none d-md-block">
+            <a class="link-dark text-decoration-none" href="{% url 'events:event-detail' event.pk %}"><h2 class="fw-light">{{ event.title }}</h2></a>
+            <p class="fw-light text-dark"><i class="bi bi-calendar-range pe-2"></i>{{ event.start_date }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselEvents" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselEvents" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Подтвердите удаление мероприятия{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center overflow-auto mx-auto" style="width: 80rem; height: 100%;">
+    <div class="card shadow border-danger mb-3 mt-5 mb-auto ms-auto me-auto" style="max-width: 40rem;">
+        <form method="post">{% csrf_token %}
+            <div class="card-body">
+                <p class="card-text py-5 px-3 fs-5"><i class="bi bi-journal-x pe-2"></i> Подтвердите удаление объекта: "{{ object }}"?</p>
+
+            </div>
+            {{ form }}
+            <div class="card-footer">
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Подтверждаю удаление</button>
+                    <a href="{% url 'events:event-detail' event.id %}" class="btn btn-outline-success btn-sm">Отказываюсь</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

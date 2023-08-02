@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% load markdown_extras %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-start mx-auto" style="width: 80rem; overflow-y: auto">
+  <div class="card mt-3 me-2" style="width: 70%;min-height: 40rem;">
+    <div class="card-header text-center p-3">
+      <h4 class="card-title fw-light">{{ event.title }}</h4>
+      <h5 class="text-muted fw-light"><i class="bi bi-calendar-range pe-2"></i> {{ event.start_time }} {{ event.start_date }} <i class="bi bi-dash-lg"></i> {{ event.end_time }} {{ event.end_date }}</h5>
+    </div>
+    <div class="card-body" style="overflow-y: auto; max-height: 40rem">
+      <p class="card-text">{{ event.description | markdown | safe }}</p>
+    </div>
+    <div class="card-footer text-center">
+      {% if guest.status == 'REGISTERED' %}
+      <i class="bi bi-info-circle pe-2"></i><span class="text-muted">Вы уже зарегистрированы на это мероприятие.</span>
+      {% endif %}
+      <div class="btn-group p-3" role="group" aria-label="Events button group">
+      {% if user.is_staff or user.is_superadmin %}
+        <a class="btn btn-outline-primary" href="{% url 'events:event-delete' event.id %}">Удалить</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:event-update' event.id %}">Изменить</a>
+      {% else %}
+        {% if guest.status != 'REGISTERED' %}
+        <a class="btn btn-outline-success" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
+        {% else %}
+        <a class="btn btn-outline-secondary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
+        {% endif %}
+      {% endif %}
+      </div>
+
+    </div>
+  </div>
+  {% if user.is_staff or user.is_superadmin %}
+  <div class="card shadow text-bg-dark mb-3 mt-3" style="width: 30%; min-height: 40rem">
+    <div class="card-header mt-2">
+      <h5 class="card-title fw-light ">Список гостей</h5>
+    </div>
+    <div class="card-body text-start" style="overflow-y: auto; max-height: 40rem">
+      {% for guest in event.guest_set.all %}
+        {% if guest.status == 'REGISTERED' %}
+        <p class="card-text"><i class="bi bi-person-fill"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
+        {% endif %}
+        {% if guest.status == 'VISITED' %}
+        <p class="card-text"><i class="bi bi-person-check-fill"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
+        {% endif %}
+        {% if guest.status == 'REFUSED' %}
+        <p class="card-text"><i class="bi bi-person-fill-slash"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
+        {% endif %}
+      {% empty %}
+        <p class="card-text">Гости не зарегистрированы</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

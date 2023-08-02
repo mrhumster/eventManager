@@ -7,7 +7,7 @@
 	<title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/codehilite_styles.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/bootstrap-icons.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,25 +23,16 @@
 <body>
     <nav class="navbar navbar-expand-lg  bg-dark text-white" data-bs-theme="dark" style="height: 56px;">
     <div class="container-md d-flex">
-      <a class="navbar-brand text-light fw-light" id="brand" href="#"><i class="bi bi-mortarboard-fill pe-2"></i>Газпром ВНИИГаз - Event Manager</a>
+      <a class="navbar-brand text-light fw-light" id="brand" href="/"><i class="bi bi-mortarboard-fill pe-2"></i>Газпром ВНИИГаз - Мероприятия</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       {% if user.is_authenticated %}
       <div class="collapse navbar-collapse text-warning ms-5" id="navbarNavDropdown">
         <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
-          <!--<li class="nav-item col-6 col-lg-auto">
-            <a class="nav-link link-light" href="#"><i class="bi bi-journal-bookmark"></i></a>
-            </a>
-          </li>
-          <li class="nav-item col-6 col-lg-auto">
-            <a class="nav-link link-light" href="#"><i class="bi bi-calendar3"></i></a>
-            </a>
-          </li>
-           <li class="nav-item col-6 col-lg-auto">
-            <a class="nav-link link-light" href="#"><i class="bi bi-award"></i></a>
-            </a>
-          </li> -->
+          {% if user.is_staff or user.is_superuser %}
+          <a class="nav-link link-primary" href="{% url 'events:new-event' %}"><i class="bi bi-calendar-plus pe-2"></i>Новое мероприятие</a>
+          {% endif %}
         </ul>
         <div class="flex-fill">
 

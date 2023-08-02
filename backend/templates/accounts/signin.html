@@ -15,7 +15,7 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
                     <div class="card-body">
-                        <h2 class="card-text fw-light mt-3 mb-4">Регистрация</h2>
+                        <h2 class="card-text fw-light my-5">Регистрация</h2>
                         {% bootstrap_field form.username show_label=False %}
                         {% bootstrap_field form.first_name show_label=False %}
                         {% bootstrap_field form.last_name show_label=False %}

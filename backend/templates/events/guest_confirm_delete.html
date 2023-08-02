@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Отменга регистрация на мероприятие "{{ guest.event.title }}"{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card text-center mx-auto mt-3 pb-3" style="width: 30rem;">
+    <form method="post">{% csrf_token %}
+      <h5 class="card-title fw-light p-3">Отмена регистрации.</h5>
+      <p class="card-text">Если вы не сможете посетить мероприятие:</p>
+      <h4 class="card-text">«{{ guest.event.title }}»</h4>
+      {{ form }}
+      <button type="submit" class="btn btn-outline-primary m-3">Подтердите отмену регистрации</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

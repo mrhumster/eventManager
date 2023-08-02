@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django_celery_results',
     'django_celery_beat',
+    'django_bootstrap5',
     'bootstrap5',
     'accounts',
+    'events',
 ]
 
 MIDDLEWARE = [
