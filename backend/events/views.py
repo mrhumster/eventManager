@@ -5,12 +5,13 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMix
 from django.contrib.sites.models import Site
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, FormView
 from django.contrib.auth.models import User, Group
 
 from eventManager.settings import SITE_SCHEMA
 from events import logger
-from events.forms import EventForm, GuestForm, NewGuestForm
+from events.forms import EventForm, GuestForm, NewGuestForm, ExistingGuestForm
 from events.models import Event, Guest
 
 from accounts.tasks import send_email
@@ -71,6 +72,7 @@ class RegisterView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
                 return redirect('events:event-detail', event.pk)
         guest, _ = Guest.objects.get_or_create(person=person, event=event)
         guest.status = 'REGISTERED'
+        guest.registered_time = datetime.datetime.now()
         guest.save()
         messages.success(self.request, 'Вы зарегистрированы на мероприятие')
         return redirect('events:event-detail', event.pk)
@@ -138,6 +140,7 @@ class AddGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
         if _:
             logger.info(f'Создан новый гость: {guest}')
         guest.status = 'REGISTERED'
+        guest.registered_time = datetime.datetime.now()
         guest.save()
 
 
@@ -148,3 +151,81 @@ class DetailGuestListView(LoginRequiredMixin, PermissionRequiredMixin, DetailVie
     model = Event
     permission_required = ['events.view_event', 'events.view_guest', 'events.change_guest', 'events.delete_guest']
     template_name = 'events/event_guest_detail.html'
+
+
+class RegisterRefusedGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = ['events.view_event', 'events.view_guest', 'events.change_guest']
+    form_class = ExistingGuestForm
+    template_name = 'events/guest_refused_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RegisterRefusedGuestView, self).get_context_data(**kwargs)
+        guest_pk = self.request.path.partition('/register/')[2][:-1]
+        guest = Guest.objects.get(pk=guest_pk)
+        context['guest'] = guest
+        return context
+
+    def form_valid(self, form):
+        event_pk = self.request.path.partition('/register/')[0][1:]
+        guest_pk = self.request.path.partition('/register/')[2][:-1]
+        guest = Guest.objects.get(id=guest_pk)
+        guest.status = 'REGISTERED'
+        guest.registered_time = datetime.datetime.now()
+        guest.save()
+        send_alert = form.cleaned_data.get('send_alert')
+        if send_alert:
+            body = f"""
+            Добрый день, {guest.person.first_name} {guest.person.last_name}!
+            {self.request.user.first_name} {self.request.user.last_name} зарегистрировал вас на мероприятие: 
+            {guest.event.title}. Будем ждать вас {guest.event.start_date} в {guest.event.start_time}.
+            """
+            msg = {
+                'subject': f'Вы зарегистрированы на мероприятие: {guest.event.title}',
+                'body': body,
+                'recipients': [guest.person.email],
+                'template': 'messages/email.html',
+                'check_email_verified': False
+            }
+            send_email.delay(**msg)
+            messages.info(self.request, 'Уведомление о регистрации пользователю отправлено')
+        return redirect('events:guest-list', event_pk)
+
+class CancelRegisteredGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
+    permission_required = ['events.view_event', 'events.view_guest', 'events.change_guest']
+    form_class = ExistingGuestForm
+    template_name = 'events/guest_registered_form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CancelRegisteredGuestView, self).get_context_data(**kwargs)
+        guest_pk = self.request.path.partition('/cancel/')[2][:-1]
+        guest = Guest.objects.get(pk=guest_pk)
+        context['guest'] = guest
+        return context
+
+    def form_valid(self, form):
+        event_pk = self.request.path.partition('/cancel/')[0][1:]
+        guest_pk = self.request.path.partition('/cancel/')[2][:-1]
+        guest = Guest.objects.get(id=guest_pk)
+        guest.status = 'REFUSED'
+        guest.refused_time = datetime.datetime.now()
+        guest.save()
+        send_alert = form.cleaned_data.get('send_alert')
+        if send_alert:
+            body = f"""
+                    Добрый день, {guest.person.first_name} {guest.person.last_name}!
+                    {self.request.user.first_name} {self.request.user.last_name} отменил регистрацию на мероприятие: 
+                    {guest.event.title}. Если возникли вопросы, напишите на: {self.request.user.email}.
+                    """
+            msg = {
+                'subject': f'Регистрация отменена: {guest.event.title}',
+                'body': body,
+                'recipients': [guest.person.email],
+                'template': 'messages/email.html',
+                'check_email_verified': False
+            }
+            send_email.delay(**msg)
+            messages.info(self.request, 'Уведомление об отмене регистрации пользователю отправлено')
+        return redirect('events:guest-list', event_pk)
+
+class DetailGuestView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Guest

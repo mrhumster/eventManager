@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Регистрация на мероприятие "{{ event }}"{% endblock %}
+{% block content %}
+  <div class="container">
+  <div class="card shadow text-center mx-auto mt-3 pb-3" style="max-width: 40rem;">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <h5 class="card-title fw-light pt-3">Добрый день, {{ user.first_name }} {{ user.last_name }}!</h5>
+        <p class="card-text pt-3">Пользователь «{{ guest.person.first_name }} {{ guest.person.last_name }}» отменил регистрацию.</p>
+        <p class="card-text">Вы действительно хотите зарегистрировать пользователя повторно?</p>
+        <div class="mx-5">{% bootstrap_field form.send_alert show_label=True label_class='text-start' %}</div>
+        <button type="submit" class="btn btn-outline-primary mt-5">Зарегистрировать</button>
+      </form>
+    </div>
+  </div>
+  </div>
+{% endblock %}

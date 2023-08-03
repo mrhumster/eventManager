@@ -20,6 +20,12 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('events:event-detail', kwargs={'pk': self.id})
 
+    def get_managers(self):
+        return self.guest_set.all().filter(person__is_staff=True)
+
+    def get_guests(self):
+        return self.guest_set.all().filter(person__is_staff=False)
+
     class Meta:
         ordering = ['start_date']
 
@@ -38,3 +44,7 @@ class Guest(models.Model):
 
     def __str__(self):
         return f'{self.person.first_name} {self.person.last_name} - {self.event.title}'
+
+
+    class Meta:
+        ordering = ['-person']

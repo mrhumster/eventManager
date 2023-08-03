@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap5 %}
 {% load markdown_extras %}
+{% load tag_extras %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% block title %}{{ event.title }}{% endblock %}
@@ -24,6 +25,11 @@
         <a class="btn btn-outline-primary" href="{% url 'events:add-an-event-guest' event.id %}">Добавить гостя</a>
         <a class="btn btn-outline-primary" href="{% url 'events:event-delete' event.id %}">Удалить мероприятие</a>
         <a class="btn btn-outline-primary" href="{% url 'events:event-update' event.id %}">Изменить мероприятие</a>
+        {% if guest.status != 'REGISTERED' %}
+        <a class="btn btn-outline-primary" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
+        {% else %}
+        <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
+        {% endif %}
       {% else %}
         {% if guest.status != 'REGISTERED' %}
         <a class="btn btn-outline-success" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
@@ -37,23 +43,26 @@
   </div>
   {% if user.is_staff or user.is_superadmin %}
   <div class="card shadow text-bg-dark mb-3 mt-3" style="width: 30%; min-height: 40rem">
-    <div class="card-header mt-2">
-      <a class="link-light" href="{% url 'events:guest-list' event.id %}"><h5 class="card-title fw-light ">Список гостей</h5></a>
+    <div class="card-header text-center mt-2">
+      <a class="link-light" href="{% url 'events:guest-list' event.id %}"><h5 class="card-title fw-light ">Список участников</h5></a>
     </div>
     <div class="card-body text-start" style="overflow-y: auto; max-height: 40rem">
-      {% for guest in event.guest_set.all %}
-        {% if guest.status == 'REGISTERED' %}
-        <p class="card-text"><i class="bi bi-person-fill"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
-        {% endif %}
-        {% if guest.status == 'VISITED' %}
-        <p class="card-text text-success"><i class="bi bi-person-check-fill"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
-        {% endif %}
-        {% if guest.status == 'REFUSED' %}
-        <p class="card-text text-secondary"><i class="bi bi-person-fill-slash"></i> {{ guest.person.first_name }} {{ guest.person.last_name }}</p>
-        {% endif %}
-      {% empty %}
-        <p class="card-text">Гости не зарегистрированы</p>
-      {% endfor %}
+      <div id="managers" class="ps-3 mb-3">
+        <div class="fw-bold mb-3">Организаторы:</div>
+        {% for guest in event.get_managers %}
+          <p class="card-text">{{ guest.status | guest_icon | safe }}<a href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
+        {% empty %}
+          <p class="fw-light ps-3">не зарегистрированы</p>
+        {% endfor %}
+      </div>
+      <div id="guests" class="ps-3">
+        <div class="fw-bold mb-3">Гости:</div>
+        {% for guest in event.get_guests %}
+          <p class="card-text">{{ guest.status | guest_icon | safe }}<a href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
+        {% empty %}
+          <p class="fw-light ps-3">не зарегистрированы</p>
+        {% endfor %}
+      </div>
     </div>
   </div>
   {% endif %}

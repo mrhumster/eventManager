@@ -50,3 +50,7 @@ class NewGuestForm(forms.Form):
         'class': 'form-control',
         'type': 'text'
     }), label='Фамилия')
+
+
+class ExistingGuestForm(forms.Form):
+    send_alert = forms.BooleanField(label='Отправить уведомление пользователю', required=False)
