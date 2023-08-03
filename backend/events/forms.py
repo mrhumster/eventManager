@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.admin.widgets import AdminDateWidget
+
 from events.models import Event, Guest
-from django.forms.widgets import MultiWidget, SplitDateTimeWidget
+from events.validators import guest_email_validator
 
 
 class EventForm(forms.ModelForm):
@@ -34,3 +34,19 @@ class GuestForm(forms.ModelForm):
     class Meta:
         model = Guest
         fields = ['event']
+
+class NewGuestForm(forms.Form):
+    email = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'type': 'email'
+    }), label='Адрес электронной почты')
+
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'type': 'text'
+    }), label='Имя')
+
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'type': 'text'
+    }), label='Фамилия')

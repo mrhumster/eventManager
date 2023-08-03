@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Регистрация на мероприятие "{{ event }}"{% endblock %}
+{% block content %}
+  <div class="container">
+  <div class="card shadow text-center mx-auto mt-3 pb-3" style="max-width: 40rem;">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <h5 class="card-title fw-light pt-3">Регистрация нового посетителя</h5>
+        <p class="card-text">на мероприятие <h5>«{{ event.title }}»</h5></p>
+        {% bootstrap_field form.email show_label=False %}
+        {% bootstrap_field form.first_name show_label=False %}
+        {% bootstrap_field form.last_name show_label=False %}
+        <button type="submit" class="btn btn-outline-primary mt-5">Зарегистрировать участника</button>
+      </form>
+    </div>
+  </div>
+  </div>
+{% endblock %}
