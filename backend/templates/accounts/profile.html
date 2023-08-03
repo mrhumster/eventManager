@@ -8,16 +8,16 @@
 {% if user.is_authenticated %}
 <div class="d-flex flex-column align-items-center px-3 pb-5 overflow-auto" style="width: 100%;">
     <div class="card mt-5 shadow" style="width: 40rem;">
-        <div class="card-header pb-3">
-            <h5 class="card-title pt-3 ps-3"><a class="btn-link link-secondary text-decoration-none" href="{% url 'accounts:user_profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a></h5>
+        <div class="card-header bg-primary text-light bg-gradient pb-3">
+            <h5 class="card-title pt-3 ps-3"><a class="btn-link link-light link-offset-2 link-offset-3-hover" href="{% url 'accounts:user_profile' user.username %}">{{ user.first_name }} {{ user.last_name }}</a></h5>
                 <div class="card-text ps-3">
                     {% if user.is_superuser %}
-                        <small class="badge bg-secondary"># administrator</small>
+                        <small class="badge bg-light text-primary"># administrator</small>
                     {% endif %}
                 </div>
                 <div class="card-text ps-3">
                     {% for group in user.groups.all %}
-                        <span class="badge bg-secondary">{{ group }}</span>
+                        <span class="badge bg-light text-primary">{{ group }}</span>
                     {% endfor %}
                 </div>
         </div>
@@ -123,7 +123,7 @@
                 >
             </div>
         </div>
-        <div class="card-footer text-end">
+        <div class="card-footer text-center">
             {% buttons %}
             <a href="{% url 'accounts:change-password' %}" class="btn btn-outline-primary mt-2"><i class="bi bi-lock pe-2"></i>Изменить пароль</a>
             <a href="{% url 'accounts:update' %}" class="btn btn-outline-primary mt-2"><i class="bi bi-person-lines-fill pe-2"></i>Редактировать</a>

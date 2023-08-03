@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/codehilite_styles.css' %}" type="text/css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="{% static 'css/css2.css' %}" type="text/css">
@@ -21,9 +21,9 @@
     {% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg  bg-dark text-white" data-bs-theme="dark" style="height: 56px;">
+    <nav class="navbar navbar-expand-lg" data-bs-theme="light" style="height: 56px; background-color: #0071BB">
     <div class="container-md d-flex">
-      <a class="navbar-brand text-light fw-light" id="brand" href="/"><i class="bi bi-mortarboard-fill pe-2"></i>Газпром ВНИИГаз - Мероприятия</a>
+      <a class="navbar-brand text-light fw-light" id="brand" href="/"><img src="{% static 'img/logo.svg' %}" alt="Bootstrap" width="100"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -31,7 +31,7 @@
       <div class="collapse navbar-collapse text-warning ms-5" id="navbarNavDropdown">
         <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
           {% if user.is_staff or user.is_superuser %}
-          <a class="nav-link link-primary" href="{% url 'events:new-event' %}"><i class="bi bi-calendar-plus pe-2"></i>Новое мероприятие</a>
+          <a class="nav-link link-light" href="{% url 'events:new-event' %}"><i class="bi bi-calendar-plus pe-2"></i>Новое мероприятие</a>
           {% endif %}
         </ul>
         <div class="flex-fill">
@@ -40,10 +40,10 @@
 
         <div class="d-flex align-items-end">
           <div class="nav-item dropdown col-6 col-lg-auto ms-md-auto">
-            <a href="#" class="btn btn-sm btn-outline-primary dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
               {{ user.first_name }} {{ user.last_name }}
             </a>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownUser1">
+            <ul class="dropdown-menu bg-light shadow" aria-labelledby="dropdownUser1">
               <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="bi bi-person-lines-fill pe-2"></i>Профиль</a></li>
                   {% if user.is_superuser %}
                     <li><a class="dropdown-item" href="/admin"><i class="bi bi-hammer pe-2"></i>Админка</a></li>
@@ -59,18 +59,18 @@
     {%  endif %}
     </div>
     </nav>
-    <main id="app" class="d-flex p-0 bg-dark" style="--bs-bg-opacity: .9">
+    <main id="app" class="d-flex p-0 bg-light-subtle" style="--bs-bg-opacity: .9">
         {% block content %}
         {% endblock %}
     </main>
     <div class="position-relative" style="z-index:1000">
         <div class="fs-2 pb-2 pe-4 position-absolute bottom-0 end-0">
-            <a href="https://t.me/XOMRKOB" class="link-light"
+            <a href="https://t.me/XOMRKOB" class="link-primary"
                data-bs-toggle="tooltip"
                  data-bs-placement="top"
                  data-bs-html="true"
                  data-bs-title="@<b>XOMRKOB</b>"><i class="bi bi-telegram"></i></a>
-            <a href="https://github.com/mrhumster/nii-base" class="link-light"
+            <a href="https://github.com/mrhumster/nii-base" class="link-primary"
                data-bs-toggle="tooltip"
                  data-bs-placement="top"
                  data-bs-html="true"

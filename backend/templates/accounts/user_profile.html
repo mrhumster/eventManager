@@ -8,12 +8,12 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center px-3 pb-5 overflow-auto" style="width: 100%;">
     <div class="card mt-5 shadow" style="width: 60rem;">
-        <div class="card-header border-none pb-3">
+        <div class="card-header bg-primary bg-gradient text-light border-none pb-3">
             <h5 class="card-title pt-3 ps-4">{{ user.first_name }} {{ user.last_name }}</h5>
-            <a class="link-primary text-decoration-none ps-4 mb-2" href="mailto:{{ user.email }}"><i class="bi bi-envelope pe-1"></i> {{ user.email }}</a>
+            <a class="link-light text-decoration-none ps-4 mb-2" href="mailto:{{ user.email }}"><i class="bi bi-envelope pe-1"></i> {{ user.email }}</a>
                 <div class="card-text ps-4 mt-2">
                     {% for group in user.groups.all %}
-                        <span class="badge bg-secondary">{{ group }}</span>
+                        <span class="badge bg-light text-primary">{{ group }}</span>
                     {% endfor %}
                 </div>
         </div>
@@ -22,7 +22,7 @@
           {% for guest in user.guest_set.all %}
             {% if guest.status == 'REGISTERED' or guest.status == 'VISITED' %}
               <div class="p-3">
-                <div><span class="text-muted pe-1">Название мероприятия:</span><a href="{% url 'events:event-detail' guest.event.id %}">{{ guest.event.title }}</a></div>
+                <div><span class="text-muted pe-1">Название мероприятия:</span><a class="link-primary link-offset-3"  href="{% url 'events:event-detail' guest.event.id %}">{{ guest.event.title }}</a></div>
                 <div><span class="text-muted pe-1">Дата регистрации:</span>{{ guest.registered_time }}</div>
                 {% if guest.status == 'VISITED' %}
                   <div><span class="text-muted pe-1">Дата посещения:</span>{{ guest.visited_time }}</div>

@@ -7,7 +7,7 @@
 
 {% block content %}
 <div class="container mx-auto px-3 pt-5" style="width: 80rem; height: 80% ">
-  <div id="carouselEvents" class="carousel carousel-dark slide pt-5">
+  <div id="carouselEvents" class="carousel slide pt-5">
     <div class="carousel-indicators">
       {% for event in events %}
         <button type="button"
@@ -22,13 +22,15 @@
         </button>
       {% endfor %}
     </div>
-    <div class="carousel-inner">
+    <div class="carousel-inner shadow rounded-5">
       {% for event in events %}
         <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
           <a href="{% url 'events:event-detail' event.pk %}"><img src="{% static 'img/event.png' %}" class="d-block w-100" alt="..."></a>
           <div class="carousel-caption d-none d-md-block">
-            <a class="link-dark text-decoration-none" href="{% url 'events:event-detail' event.pk %}"><h2 class="fw-light">{{ event.title }}</h2></a>
-            <p class="fw-light text-dark"><i class="bi bi-calendar-range pe-2"></i>{{ event.start_date }}</p>
+            <a class="link-light text-decoration-none" href="{% url 'events:event-detail' event.pk %}">
+              <h2 class="fw-light">{{ event.title }}</h2>
+            </a>
+            <p class="fw-light text-light"><i class="bi bi-calendar-range pe-2"></i>{{ event.start_date }}</p>
           </div>
         </div>
       {% endfor %}

@@ -24,11 +24,11 @@
                   {% bootstrap_field form.password show_label=False %}
                   {% buttons %}
                   <div class="d-grid gap-1 pt-4">
-                    <button id="id_login" type="submit" class="btn btn-outline-primary btn-sm mx-5"><i class="bi bi-door-open pe-2"></i>Войти</button>
+                    <button id="id_login" type="submit" class="btn btn-outline-primary btn-sm mx-5">Вход</button>
                   </div>
                 {% endbuttons %}
                       <div class="d-grid gap-1">
-                        <a href="{% url 'accounts:signin' %}" class="btn btn-sm btn-outline-secondary mx-5"><i class="bi bi-person-plus pe-2"></i>Зарегистрироваться</a>
+                        <a href="{% url 'accounts:signin' %}" class="btn btn-sm btn-outline-primary mx-5">Регистрация</a>
                       </div>
                     <div class="card-text mt-3">
                         <a href="{% url 'accounts:forgot-password' %}" class="link-primary  px-3 mt-auto"></i>Забыл пароль</a>

@@ -8,10 +8,10 @@
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-start mx-auto" style="width: 80rem; overflow-y: auto">
-  <div class="card mt-3 me-2" style="width: 70%;min-height: 40rem;">
-    <div class="card-header text-center p-3">
+  <div class="card mt-3 me-2 shadow" style="width: 70%;min-height: 40rem;">
+    <div class="card-header text-center bg-primary bg-gradient text-light p-3">
       <h4 class="card-title fw-light">{{ event.title }}</h4>
-      <h5 class="text-muted fw-light"><i class="bi bi-calendar-range pe-2"></i> {{ event.start_time }} {{ event.start_date }} <i class="bi bi-dash-lg"></i> {{ event.end_time }} {{ event.end_date }}</h5>
+      <h5 class="fw-light"><i class="bi bi-calendar-range pe-2"></i> {{ event.start_time }} {{ event.start_date }} <i class="bi bi-dash-lg"></i> {{ event.end_time }} {{ event.end_date }}</h5>
     </div>
     <div class="card-body" style="overflow-y: auto; max-height: 40rem">
       <p class="card-text">{{ event.description | markdown | safe }}</p>
@@ -32,9 +32,9 @@
         {% endif %}
       {% else %}
         {% if guest.status != 'REGISTERED' %}
-        <a class="btn btn-outline-success" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
         {% else %}
-        <a class="btn btn-outline-secondary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
         {% endif %}
       {% endif %}
       </div>
@@ -42,15 +42,15 @@
     </div>
   </div>
   {% if user.is_staff or user.is_superadmin %}
-  <div class="card shadow text-bg-dark mb-3 mt-3" style="width: 30%; min-height: 40rem">
-    <div class="card-header text-center mt-2">
-      <a class="link-light" href="{% url 'events:guest-list' event.id %}"><h5 class="card-title fw-light ">Список участников</h5></a>
+  <div class="card shadow mb-3 mt-3" style="width: 30%; min-height: 40rem">
+    <div class="card-header text-center bg-primary bg-gradient text-light">
+      <a class="link-light link-offset-3" href="{% url 'events:guest-list' event.id %}"><h5 class="card-title fw-light ">Список участников</h5></a>
     </div>
     <div class="card-body text-start" style="overflow-y: auto; max-height: 40rem">
       <div id="managers" class="ps-3 mb-3">
         <div class="fw-bold mb-3">Организаторы:</div>
         {% for guest in event.get_managers %}
-          <p class="card-text">{{ guest.status | guest_icon | safe }}<a href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
+          <p class="card-text">{{ guest.status | guest_icon | safe }}<a class="link-primary link-offset-3" href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
         {% empty %}
           <p class="fw-light ps-3">не зарегистрированы</p>
         {% endfor %}
@@ -58,7 +58,7 @@
       <div id="guests" class="ps-3">
         <div class="fw-bold mb-3">Гости:</div>
         {% for guest in event.get_guests %}
-          <p class="card-text">{{ guest.status | guest_icon | safe }}<a href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
+          <p class="card-text">{{ guest.status | guest_icon | safe }}<a class="link-primary link-offset-3" href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></p>
         {% empty %}
           <p class="fw-light ps-3">не зарегистрированы</p>
         {% endfor %}
