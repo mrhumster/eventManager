@@ -24,6 +24,7 @@ def index(request):
             form = LoginForm()
 
         case 'POST':
+            next_url = request.GET.get('next', None)
             form = LoginForm(request.POST)
             if form.is_valid():
                 username = request.POST['username']
@@ -43,8 +44,8 @@ def index(request):
                                 request, 'Ваш адрес электронной почты не подтверждён. Функционал может быть ограничен. '
                                          'Если вы не получили письмо с подтверждением, можете запросить его повторно в '
                                          'представлении "Профиль" пользователя.')
-                    if cache.get("next"):
-                        return redirect(cache.get("next"))
+                    if next_url:
+                        return redirect(next_url)
                     else:
                         return redirect(LOGIN_REDIRECT_URL)
                 elif user is not None and not user.is_active:

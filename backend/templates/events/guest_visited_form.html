@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Регитрация посещения мероприятия "{{ event }}"{% endblock %}
+{% block content %}
+  <div class="container">
+  <div class="card shadow text-center mx-auto mt-3 pb-3" style="max-width: 40rem;">
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <h5 class="card-title fw-light pt-3">{{ guest.person.first_name }} {{ guest.person.last_name }} пришел на мероприятие?</h5>
+        <div class="alert alert-primary mx-5 mt-3 pt-3"><i class="bi bi-info-circle pe-2"></i>Если не поставить галочку ниже, сформируется задание на организаторов.
+          <div class="mx-5 mt-3">{% bootstrap_field form.dont_create_task show_label=True %}</div>
+        </div>
+        <button type="submit" class="btn btn-outline-primary mt-5">{{ guest.person.first_name }} {{ guest.person.last_name }} пришел</button>
+      </form>
+    </div>
+  </div>
+  </div>
+{% endblock %}

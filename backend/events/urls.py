@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import NewEventView, ListEventView, DetailEventView, DeleteEventView, RegisterView, CancelView, \
-    UpdateEventView, AddGuestView, DetailGuestListView, RegisterRefusedGuestView, CancelRegisteredGuestView
+    UpdateEventView, AddGuestView, DetailGuestListView, RegisterRefusedGuestView, CancelRegisteredGuestView, \
+    SetVisitedGuestView
 
 app_name = 'events'
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
     path('<int:pk>/register/<int:person_id>/', RegisterRefusedGuestView.as_view(), name='register-refused-guest'),
     path('<int:pk>/cancel/', CancelView.as_view(), name='cancel-registration'),
     path('<int:pk>/cancel/<int:person_id>/', CancelRegisteredGuestView.as_view(), name='cancel-registered-guest'),
+    path('<int:pk>/visited/<int:person_id>/', SetVisitedGuestView.as_view(), name='set-visited-guest'),
     path('<int:pk>/add-guest/', AddGuestView.as_view(), name='add-an-event-guest'),
     path('<int:pk>/guest-list/', DetailGuestListView.as_view(), name='guest-list'),
 ]

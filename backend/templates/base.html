@@ -56,7 +56,15 @@
         </div>
 
       </div>
-    {%  endif %}
+      {% else %}
+        <div class="d-flex">
+          <div class="nav-item col-6 col-lg-auto ms-md-auto">
+            <a href="{% url 'accounts:index' %}" class="link-light link-offset-3">
+              Вход
+            </a>
+          </div>
+        </div>
+      {%  endif %}
     </div>
     </nav>
     <main id="app" class="d-flex p-0 bg-light-subtle" style="--bs-bg-opacity: .9">

@@ -19,12 +19,24 @@
             <div class="col-1">{{ guest.status | guest_icon | safe }}</div>
             <div class="col"><a class="link-primary link-offset-3" href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></div>
             <div class="col"><a class="link-primary link-offset-3"  href="mailto:{{ guest.person.email }}">{{ guest.person.email }}</a></div>
-            <div class="col-2">
+            <div class="col-3 text-end">
               <div class="btn-group btn-group-sm">
                 {% if guest.status == 'REGISTERED' %}
-                  <a class="btn btn-outline-primary" href="{% url 'events:cancel-registered-guest' event.pk guest.pk %}">Отменить регистрацию</a>
+
+                  <a class="btn btn-outline-primary"
+                     href="{% url 'events:cancel-registered-guest' event.pk guest.pk %}"
+                     data-bs-toggle="tooltip" data-bs-placement="bottom"
+                     data-bs-title="Отметить  {{ guest.person.first_name }} {{ guest.person.last_name }} как не работающего на мероприятии">Убрать из организаторов</a>
+
                 {% elif guest.status == 'REFUSED' %}
-                  <a class="btn btn-outline-primary" href="{% url 'events:register-refused-guest' event.pk guest.pk %}">Зарегистрировать</a>
+
+                  <a class="btn btn-outline-primary"
+                     href="{% url 'events:register-refused-guest' event.pk guest.pk %}"
+                     data-bs-toggle="tooltip" data-bs-placement="bottom"
+                     data-bs-title="Отметить что по {{ guest.person.first_name }} {{ guest.person.last_name }} будет присутствовать на мероприятии">Зарегистрировать</a>
+
+                {% elif guest.status == 'VISITED' %}
+
                 {% endif %}
               </div>
             </div>
@@ -40,12 +52,27 @@
               <div class="col-1">{{ guest.status | guest_icon | safe }}</div>
               <div class="col"><a class="link-primary link-offset-3" href="{% url 'accounts:user_profile' guest.person.username %}">{{ guest.person.first_name }} {{ guest.person.last_name }}</a></div>
               <div class="col"><a class="link-primary link-offset-3" href="mailto:{{ guest.person.email }}">{{ guest.person.email }}</a></div>
-              <div class="col-2">
+              <div class="col-3 text-end">
                 <div class="btn-group btn-group-sm">
                   {% if guest.status == 'REGISTERED' %}
-                    <a class="btn btn-outline-primary" href="{% url 'events:cancel-registered-guest' event.pk guest.pk %}">Отменить регистрацию</a>
+
+                    <a class="btn btn-outline-primary"
+                       href="{% url 'events:set-visited-guest' event.pk guest.pk %}"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       data-bs-title="Отметить {{ guest.person.first_name }} {{ guest.person.last_name }} как пришедшего на мероприятие">Пришел</a>
+
+                    <a class="btn btn-outline-secondary"
+                       href="{% url 'events:cancel-registered-guest' event.pk guest.pk %}"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       data-bs-title="Отметить что {{ guest.person.first_name }} {{ guest.person.last_name }} не посетит мероприятие">Не придет</a>
+
                   {% elif guest.status == 'REFUSED' %}
-                    <a class="btn btn-outline-primary" href="{% url 'events:register-refused-guest' event.pk guest.pk %}">Зарегистрировать</a>
+
+                    <a class="btn btn-outline-primary"
+                       href="{% url 'events:register-refused-guest' event.pk guest.pk %}"
+                       data-bs-toggle="tooltip" data-bs-placement="bottom"
+                       data-bs-title="Отметить что по {{ guest.person.first_name }} {{ guest.person.last_name }} будет присутствовать на мероприятии">Придет</a>
+
                   {% endif %}
                 </div>
               </div>

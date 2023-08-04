@@ -17,7 +17,7 @@
       <p class="card-text">{{ event.description | markdown | safe }}</p>
     </div>
     <div class="card-footer text-center">
-      {% if guest.status == 'REGISTERED' %}
+      {% if guest.status == 'REGISTERED' or guest.status == 'VISITED' %}
       <i class="bi bi-info-circle pe-2"></i><span class="text-muted">Вы уже зарегистрированы на это мероприятие.</span>
       {% endif %}
       <div class="btn-group p-3" role="group" aria-label="Events button group">
@@ -31,10 +31,12 @@
         <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
         {% endif %}
       {% else %}
-        {% if guest.status != 'REGISTERED' %}
+        {% if not guest.status %}
         <a class="btn btn-outline-primary" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
-        {% else %}
+        {% elif guest.status == 'REGISTERED' %}
         <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
+        {% elif guest.status == 'VISITED' %}
+
         {% endif %}
       {% endif %}
       </div>

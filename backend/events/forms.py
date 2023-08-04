@@ -54,3 +54,7 @@ class NewGuestForm(forms.Form):
 
 class ExistingGuestForm(forms.Form):
     send_alert = forms.BooleanField(label='Отправить уведомление пользователю', required=False)
+
+
+class SetVisitedConfirmForm(forms.Form):
+    dont_create_task = forms.BooleanField(label='Не создавать задание для организаторов', required=False)
