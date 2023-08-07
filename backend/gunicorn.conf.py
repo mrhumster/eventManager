@@ -11,6 +11,7 @@ reload_extra_files = [
     "/backend/templates/accounts",
     "/backend/templates/messages",
     "/backend/templates/events",
+    "/backend/static/js",
 ]
 
 # Logging

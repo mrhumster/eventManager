@@ -8,3 +8,6 @@ Django~=4.2.3
 Markdown
 django-bootstrap5
 django-datetime-widget
+djangorestframework
+markdown
+django-filter

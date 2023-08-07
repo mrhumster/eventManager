@@ -479,3 +479,24 @@ input::invalid {
     padding: 0 10px 0 10px;
     font-size: 12px;
 }
+
+.bd-sidebar {
+    grid-area: sidebar;
+}
+
+@media (min-width: 992px) {
+    .bd-sidebar {
+        position: sticky;
+        top: 5rem;
+        display: block !important;
+        height: calc(100hv - 6rem);
+        padding-left: 0.25rem;
+        margin-left: -0.24rem;
+        overflow-y: auto;
+    }
+}
+
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+}

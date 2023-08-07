@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% load markdown_extras %}
+{% load tag_extras %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Задания{% endblock %}
+
+{% block content %}
+  <div class="container-xxl" id="app">
+  </div>
+{% endblock %}
+{% block script %}
+  <script>
+    const event = {}
+    event['id'] = "{{ event.pk }}"
+  </script>
+  <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+  <script src="{% static 'js/event_task.js' %}"></script>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from events.models import Event, Guest
+from events.models import Event, Guest, Task
 
 
 # Register your models here.
@@ -11,3 +11,8 @@ class EventAdmin(admin.ModelAdmin):
 @admin.register(Guest)
 class GuestAdmin(admin.ModelAdmin):
     model = Guest
+
+
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    model = Task
