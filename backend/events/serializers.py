@@ -9,10 +9,10 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EventSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(source='task_set', many=True, read_only=True)
     class Meta:
         model = Event
         fields = '__all__'
-
 
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:

@@ -5,13 +5,16 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMix
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, FormView, TemplateView
 
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from accounts.tasks import send_email
 from eventManager.settings import SITE_SCHEMA
@@ -33,6 +36,7 @@ class NewEventView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Event
     permission_required = ['events.add_event']
     form_class = EventForm
+    success_url = reverse_lazy('events:events')
 
 
 class DetailEventView(DetailView):
@@ -51,7 +55,7 @@ class DetailEventView(DetailView):
 class DeleteEventView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Event
     permission_required = ['events.delete_event']
-    success_url = reverse_lazy('events:event-list')
+    success_url = reverse_lazy('events:events')
 
 
 class RegisterView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -72,12 +76,12 @@ class RegisterView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         for guest in person.guest_set.all():
             if guest.event == event and guest.status in ('REGISTERED', 'VISITED'):
                 messages.info(self.request, 'Вы уже зарегистрированы на мероприятии')
-                return redirect('events:event-detail', event.pk)
+                return redirect('events:event', event.pk)
         guest, _ = Guest.objects.get_or_create(person=person, event=event)
         guest.status = 'REGISTERED'
         guest.save()
         messages.success(self.request, 'Вы зарегистрированы на мероприятие')
-        return redirect('events:event-detail', event.pk)
+        return redirect('events:event', event.pk)
 
 
 class CancelView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -88,19 +92,20 @@ class CancelView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         self.object.status = 'REFUSED'
         self.object.save()
         messages.info(self.request, 'Регистрация отменена')
-        return redirect('events:event-detail', self.object.event.pk)
+        return redirect('events:event', self.object.event.pk)
 
 class UpdateEventView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Event
     permission_required = ['events.change_event']
     form_class = EventForm
-
+    def get_success_url(self):
+        return reverse('events:event', kwargs={'pk': self.object.pk})
 
 class AddGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = ['events.add_guest', 'events.view_event', 'events.change_event']
     form_class = NewGuestForm
     template_name = 'events/new_guest_form.html'
-    success_url = reverse_lazy('events:event-list')
+
 
     def get_context_data(self, **kwargs):
         context = super(AddGuestView, self).get_context_data(**kwargs)
@@ -144,7 +149,7 @@ class AddGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
         guest.save()
 
 
-        return redirect('events:event-detail', event.pk)
+        return redirect('events:event', event.pk)
 
 
 class DetailGuestListView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -187,7 +192,8 @@ class RegisterRefusedGuestView(LoginRequiredMixin, PermissionRequiredMixin, Form
             }
             send_email.delay(**msg)
             messages.info(self.request, 'Уведомление о регистрации пользователю отправлено')
-        return redirect('events:guest-list', event_pk)
+            logger.info(redirect('events:event-guests', event_pk))
+        return redirect('events:event-guests', event_pk)
 
 class SetVisitedGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = ['events.view_event', 'events.view_guest', 'events.change_guest']
@@ -259,51 +265,23 @@ class TasksList(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         event_pk = self.request.path.partition('/tasks/')[0][1:]
         event = Event.objects.get(pk=event_pk)
         context['event'] = event
+        context['login_guest_id'] = self.request.user.guest_set.first().id
         return context
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def task_list(request, pk):
-    try:
-        event = Event.objects.get(id=pk)
-    except Event.DoesNotExist as error:
-        content = {'error': error.__str__()}
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
+class EventViewSet(ModelViewSet):
+    serializer_class = EventSerializer
+    queryset = Event.objects.all()
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    tasks = event.task_set.all()
-    serializer = TaskSerializer(tasks, many=True)
-    return Response(serializer.data)
+class TaskViewSet(ModelViewSet):
+    serializer_class = TaskSerializer
+    queryset = Task.objects.all()
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def event_detail(request, pk):
-    try:
-        event = Event.objects.get(id=pk)
-    except Event.DoesNotExist as error:
-        content = {'error': error.__str__()}
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
-    serializer = EventSerializer(event)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def guest_detail(request, pk):
-    try:
-        guest = Guest.objects.get(id=pk)
-    except Guest.DoesNotExist as error:
-        content = {'error': error.__str__()}
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
-    serializer = GuestSerializer(guest)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def task_detail(request, pk):
-    try:
-        guest = Task.objects.get(id=pk)
-    except Task.DoesNotExist as error:
-        content = {'error': error.__str__()}
-        return Response(content, status=status.HTTP_404_NOT_FOUND)
-    serializer = TaskSerializer(guest)
-    return Response(serializer.data)
+class GuestViewSet(ModelViewSet):
+    serializer_class = GuestSerializer
+    queryset = Guest.objects.all()
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]

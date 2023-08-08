@@ -15,6 +15,7 @@
   <script>
     const event = {}
     event['id'] = "{{ event.pk }}"
+    const user_id = {{ login_guest_id }}
   </script>
   <script src="{% static 'js/moment-with-locales.min.js' %}"></script>
   <script src="{% static 'js/event_task.js' %}"></script>

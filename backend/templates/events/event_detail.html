@@ -20,15 +20,16 @@
       {% if guest.status == 'REGISTERED' or guest.status == 'VISITED' %}
       <i class="bi bi-info-circle pe-2"></i><span class="text-muted">Вы уже зарегистрированы на это мероприятие.</span>
       {% endif %}
-      <div class="btn-group p-3" role="group" aria-label="Events button group">
+      <div class="btn-group btn-group-lg p-3" role="group" aria-label="Events button group">
       {% if user.is_staff or user.is_superadmin %}
-        <a class="btn btn-outline-primary" href="{% url 'events:add-an-event-guest' event.id %}">Добавить гостя</a>
-        <a class="btn btn-outline-primary" href="{% url 'events:event-delete' event.id %}">Удалить мероприятие</a>
-        <a class="btn btn-outline-primary" href="{% url 'events:event-update' event.id %}">Изменить мероприятие</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:add-an-event-guest' event.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Добавить нового гостя"><i class="bi bi-person-add"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'events:event-delete' event.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Удалить мероприятие"><i class="bi bi-calendar-x"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'events:event-update' event.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Изменить мероприятие"><i class="bi bi-pen"></i></a>
+        <a class="btn btn-outline-primary" href="{% url 'events:event-tasks' event.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Задания для организаторов"><i class="bi bi-list-task"></i></a>
         {% if guest.status != 'REGISTERED' %}
-        <a class="btn btn-outline-primary" href="{% url 'events:register-for-the-event' event.id %}">Принять участие</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:register-for-the-event' event.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Принять участие"><i class="bi bi-person-check"></i></a>
         {% else %}
-        <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}">Не смогу присутствовать</a>
+        <a class="btn btn-outline-primary" href="{% url 'events:cancel-registration' guest.id %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Не смогу присутствовать"><i class="bi bi-person-dash"></i></a>
         {% endif %}
       {% else %}
         {% if not guest.status %}

@@ -35,6 +35,7 @@ class Command(BaseCommand):
             staff_group.permissions.add(Permission.objects.get(name='Can change guest'))
             staff_group.permissions.add(Permission.objects.get(name='Can delete guest'))
             staff_group.permissions.add(Permission.objects.get(name='Can add guest'))
+            staff_group.permissions.add(Permission.objects.get(name='Can view settings'))
 
 
         user_group, _ = Group.objects.get_or_create(name='user')

@@ -65,7 +65,6 @@ services:
       - backend
 volumes:
   event-db:
-    driver: local
   static:
   media:
 

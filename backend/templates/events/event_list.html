@@ -25,9 +25,9 @@
     <div class="carousel-inner shadow rounded-5">
       {% for event in events %}
         <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
-          <a href="{% url 'events:event-detail' event.pk %}"><img src="{% static 'img/event.png' %}" class="d-block w-100" alt="..."></a>
+          <a href="{% url 'events:event' event.pk %}"><img src="{% static 'img/event.png' %}" class="d-block w-100" alt="..."></a>
           <div class="carousel-caption d-none d-md-block">
-            <a class="link-light text-decoration-none" href="{% url 'events:event-detail' event.pk %}">
+            <a class="link-light text-decoration-none" href="{% url 'events:event' event.pk %}">
               <h2 class="fw-light">{{ event.title }}</h2>
             </a>
             <p class="fw-light text-light"><i class="bi bi-calendar-range pe-2"></i>{{ event.start_date }}</p>
