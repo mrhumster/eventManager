@@ -313,6 +313,11 @@ class GuestViewSet(ModelViewSet):
                 event = Event.objects.get(id=serializer.validated_data['event_id'])
                 guest = Guest.objects.get(person__first_name=serializer.validated_data['first_name'],
                                           person__last_name=serializer.validated_data['last_name'], event=event)
+                if guest.status == Guest.VISITED:
+                    return Response({
+                        'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
+                    },
+                        status=status.HTTP_400_BAD_REQUEST)
                 guest.status = Guest.VISITED
                 guest.save()
                 imgstr64 = serializer.validated_data['image']
@@ -322,7 +327,7 @@ class GuestViewSet(ModelViewSet):
                     f.write(imgdata)
                 imgname = '%s.jpg' % (str(guest.id))
                 guest.image.save(imgname, File(open(fname, 'br')))
-                #os.remove(fname)
+                os.remove(fname)
                 guest_serializer = GuestSerializer(guest)
                 return Response(guest_serializer.data, status=status.HTTP_200_OK)
             else:
