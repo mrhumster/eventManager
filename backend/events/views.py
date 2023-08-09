@@ -194,8 +194,8 @@ class RegisterRefusedGuestView(LoginRequiredMixin, PermissionRequiredMixin, Form
             }
             send_email.delay(**msg)
             messages.info(self.request, 'Уведомление о регистрации пользователю отправлено')
-            logger.info(redirect('events:event-guests', event_pk))
-        return redirect('events:event-guests', event_pk)
+
+        return redirect('events:event', event_pk)
 
 class SetVisitedGuestView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     permission_required = ['events.view_event', 'events.view_guest', 'events.change_guest']
