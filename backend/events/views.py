@@ -312,7 +312,9 @@ class GuestViewSet(ModelViewSet):
             if serializer.is_valid():
                 event = Event.objects.get(id=serializer.validated_data['event_id'])
                 guest = Guest.objects.get(person__first_name=serializer.validated_data['first_name'],
-                                          person__last_name=serializer.validated_data['last_name'], event=event)
+                                          person__last_name=serializer.validated_data['last_name'],
+                                          event=event,
+                                          person__is_staff=False)
                 if guest.status == Guest.VISITED:
                     return Response({
                         'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
