@@ -21,7 +21,7 @@ main {
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -31,7 +31,7 @@ main {
 
 ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: #00000069;
+    background-color: #0071bb;
     -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
 }
 
@@ -502,19 +502,31 @@ input::invalid {
 }
 
 .bounce-enter-active {
-  animation: bounce-in 0.5s;
+  animation: bounce-in 0.3s;
 }
 .bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
+  animation: bounce-out 0.3s;
 }
 @keyframes bounce-in {
   0% {
     transform: scale(0);
   }
   50% {
-    transform: scale(1.25);
+    transform: scale(1.15);
   }
   100% {
     transform: scale(1);
   }
+}
+
+@keyframes bounce-out {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.5);
+    }
+    100% {
+        transform: scale(0);
+    }
 }

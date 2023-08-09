@@ -36,10 +36,17 @@ const app = Vue.createApp({
     methods: {
         get_event() {
             this.event['id'] = event.id
-            axios.get(`/api/events/${this.event.id}/`).then((response) => {
+            const config = {
+                headers:{
+                    ETag: this.event.change_time,
+              }
+            };
+            axios.get(`/api/events/${this.event.id}/`, config).then((response) => {
                 this.event = response.data
             }).catch((error) => {
-                console.log(error)
+                if (error.response.status != 304) {
+                    console.log(error)
+                }
             })
         }
     },
@@ -47,7 +54,7 @@ const app = Vue.createApp({
         this.get_event()
         setInterval(function () {
       		this.get_event();
-    	}.bind(this), 5000);
+    	}.bind(this), 2500);
     },
     template: `
 <div class="card shadow mt-3" style="height: 95%">
@@ -89,21 +96,18 @@ app.component("task-control-panel", {
     `,
     methods: {
         async setTaskStatus(status) {
-            this.current_task.status = status
-            this.current_task.executor = user_id
             await axios.patch(`/api/tasks/${this.current_task.id}/`, {status: status, executor: user_id})
                 .then(response => {
-                    console.log(response)
+                    this.$root.current_task = response.data
                 })
                 .catch(error => {
                     console.error('There was an error!', error);
                 })
         },
         async setTaskExecutor() {
-            this.current_task.executor = user_id
             await axios.patch(`/api/tasks/${this.current_task.id}/`, {executor: user_id})
                 .then(response => {
-                    console.log(response)
+                    this.$root.current_task = response.data
                 })
                 .catch(error => {
                     console.error('There was an error!', error);
@@ -225,9 +229,9 @@ app.component('task-browser', {
   <div class="border rounded-1" style="height: 100%">
     <div class="d-flex flex-column align-items-center">
       <!--<h5 class="fw-light p-3">Задание [[ current_task.id ]]</h5>-->
-        <div class="d-flex mt-5">
+        <div class="d-flex justify-content-between flex-wrap mt-5">
           <guest :guest_id="current_task.guest" :key="current_task.guest.id"></guest>
-          <task-detail :task_id="current_task.id" :key="current_task.id + current_task.executor + current_task.status"></task-detail>
+          <task-detail :task_id="current_task.id" :key="current_task.status"></task-detail>
         </div>
         <task-control-panel :current_task="current_task" v-if="current_task" :key="current_task.id"></task-control-panel>
     </div>
@@ -298,9 +302,7 @@ app.component('task-detail', {
     
   </div>
   <div class="card-footer text-end" style="min-height: 3rem">
-    <transition name="bounce">
     <task-executor v-if="task.executor" :guest_id="task.executor" :key="task.executor"></task-executor>
-    </transition>
   </div>
 </div>
     `
@@ -352,8 +354,8 @@ app.component('guest', {
         };
     },
     template: `
-<div class="card shadow" style="width: 24rem;">
-  <img src="/static/img/guest.png" class="card-img-top" alt="...">
+<div class="card shadow" v-if="guest" style="width: 24rem;">
+  <img v-if="guest.image" :src="guest.image" class="card-img-top" alt="...">
   <div class="card-body" v-if="guest">
     <h5 class="card-text">[[ guest.person.first_name ]] [[ guest.person.last_name ]]</h5>
     <a class="link-primary" href="mailto:[[guest.person.email]]">[[ guest.person.email ]]</a>

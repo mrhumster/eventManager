@@ -18,6 +18,7 @@ class Event(models.Model):
     start_date = models.DateField(verbose_name='Дата начала мероприятия', default=datetime.date.today)
     end_time = models.TimeField(verbose_name='Время окончание мероприятия')
     end_date = models.DateField(verbose_name='Дата окончание мероприятия', default=datetime.date.today)
+    change_time = models.DateTimeField(verbose_name='Время изменения', default=timezone.now())
 
     def __str__(self):
         return self.title
@@ -50,6 +51,8 @@ class Guest(models.Model):
     visited_time = models.DateTimeField(verbose_name='Время посещения', null=True, blank=True)
     refused_time = models.DateTimeField(verbose_name='Время отказа', null=True, blank=True)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    change_time = models.DateTimeField(verbose_name='Время изменения', auto_now=True)
+    image = models.ImageField(upload_to='guests', blank=True, max_length=255)
 
     def __str__(self):
         return f'{self.person.first_name} {self.person.last_name} - {self.event.title}'
@@ -107,9 +110,16 @@ class Task(models.Model):
     closed_time = models.DateTimeField(verbose_name='Время завершения задачи', null=True, blank=True)
     cancel_time = models.DateTimeField(verbose_name='Время отмены задачи', null=True, blank=True)
     status = models.CharField(verbose_name='Статус задачи', choices=TASK_STATUS, default=NEW)
+    change_time = models.DateTimeField(verbose_name='Время изменения', auto_now=True)
 
     def __str__(self):
         return f'{self.pk} - {self.status } - {self.guest.person.first_name} {self.guest.person.last_name} - {self.event.title}'
+
+    def save(self, *args, **kwargs):
+        self.event.change_time = timezone.now()
+        self.event.save()
+        logger.info(self.event.change_time)
+        return super(Task, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-created_time']

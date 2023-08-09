@@ -11,3 +11,5 @@ django-datetime-widget
 djangorestframework
 markdown
 django-filter
+django-rest-framework-condition
+Pillow

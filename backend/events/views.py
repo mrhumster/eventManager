@@ -1,19 +1,21 @@
+import base64
 import datetime
+import os.path
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
+from django.core.files import File
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
+from django.utils.dateparse import parse_datetime
 from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, FormView, TemplateView
-
 from rest_framework import status
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from accounts.tasks import send_email
@@ -21,7 +23,7 @@ from eventManager.settings import SITE_SCHEMA
 from events import logger
 from events.forms import EventForm, GuestForm, NewGuestForm, ExistingGuestForm, SetVisitedConfirmForm
 from events.models import Event, Guest, Task
-from events.serializers import TaskSerializer, EventSerializer, GuestSerializer
+from events.serializers import TaskSerializer, EventSerializer, GuestSerializer, VisitSerializer
 
 
 class ListEventView(ListView):
@@ -272,16 +274,57 @@ class EventViewSet(ModelViewSet):
     serializer_class = EventSerializer
     queryset = Event.objects.all()
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    @action(methods=['get'], detail=True)
+    def guests(self, request, pk):
+        event = Event.objects.get(id=pk)
+        serializer = GuestSerializer(event.guest_set.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        etag = request.headers.get('ETag', '')
+        last_modified = parse_datetime(etag)
+        if last_modified == instance.change_time:
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
+        return Response(serializer.data, headers={'ETag': instance.change_time})
+
+
 
 class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 class GuestViewSet(ModelViewSet):
     serializer_class = GuestSerializer
     queryset = Guest.objects.all()
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    @action(methods=['post'], detail=False)
+    def visit(self, request):
+        if request.method == 'POST':
+            serializer = VisitSerializer(data=request.data)
+            if serializer.is_valid():
+                event = Event.objects.get(id=serializer.validated_data['event_id'])
+                guest = Guest.objects.get(person__first_name=serializer.validated_data['first_name'],
+                                          person__last_name=serializer.validated_data['last_name'], event=event)
+                guest.status = Guest.VISITED
+                guest.save()
+                imgstr64 = serializer.validated_data['image']
+                imgdata = base64.b64decode(imgstr64)
+                fname = '/tmp/%s.jpg' % (str(guest.id))
+                with open(fname, 'wb') as f:
+                    f.write(imgdata)
+                imgname = '%s.jpg' % (str(guest.id))
+                guest.image.save(imgname, File(open(fname, 'br')))
+                #os.remove(fname)
+                guest_serializer = GuestSerializer(guest)
+                return Response(guest_serializer.data, status=status.HTTP_200_OK)
+            else:
+                logger.info(serializer.errors)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
