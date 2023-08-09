@@ -323,13 +323,14 @@ class GuestViewSet(ModelViewSet):
                 guest.status = Guest.VISITED
                 guest.save()
                 imgstr64 = serializer.validated_data['image']
-                imgdata = base64.b64decode(imgstr64)
-                fname = '/tmp/%s.jpg' % (str(guest.id))
-                with open(fname, 'wb') as f:
-                    f.write(imgdata)
-                imgname = '%s.jpg' % (str(guest.id))
-                guest.image.save(imgname, File(open(fname, 'br')))
-                os.remove(fname)
+                if imgstr64:
+                    imgdata = base64.b64decode(imgstr64)
+                    fname = '/tmp/%s.jpg' % (str(guest.id))
+                    with open(fname, 'wb') as f:
+                        f.write(imgdata)
+                    imgname = '%s.jpg' % (str(guest.id))
+                    guest.image.save(imgname, File(open(fname, 'br')))
+                    os.remove(fname)
                 guest_serializer = GuestSerializer(guest)
                 return Response(guest_serializer.data, status=status.HTTP_200_OK)
             else:
