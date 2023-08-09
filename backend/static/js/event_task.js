@@ -384,6 +384,7 @@ app.component('guest', {
                 this.guest.registered_time = dt_format(this.guest.registered_time)
                 this.guest.visited_time = dt_format(this.guest.visited_time)
                 this.guest.cancel_time = dt_format(this.guest.cancel_time)
+                this.guest.refused_time = dt_format(this.guest.refused_time)
             }).catch((error) => {
                 console.log(error)
             })
