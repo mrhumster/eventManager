@@ -48,6 +48,7 @@ services:
     build: ./nginx/
     volumes:
       - static:/static/
+      - media:/media/
       - ./nginx/ssl/key.pem:/root/ssl/key.pem
       - ./nginx/ssl/cert.pem:/root/ssl/cert.pem
     ports:
