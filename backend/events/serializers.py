@@ -31,3 +31,4 @@ class VisitSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     image = serializers.CharField()
+    email = serializers.EmailField()

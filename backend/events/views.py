@@ -311,15 +311,26 @@ class GuestViewSet(ModelViewSet):
             serializer = VisitSerializer(data=request.data)
             if serializer.is_valid():
                 event = Event.objects.get(id=serializer.validated_data['event_id'])
-                guest = Guest.objects.get(person__first_name=serializer.validated_data['first_name'],
+                try:
+                    guest = Guest.objects.get(person__first_name=serializer.validated_data['first_name'],
                                           person__last_name=serializer.validated_data['last_name'],
+                                          person__email=serializer.validated_data['email'],
                                           event=event,
                                           person__is_staff=False)
-                if guest.status == Guest.VISITED:
-                    return Response({
-                        'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
-                    },
-                        status=status.HTTP_400_BAD_REQUEST)
+                    if guest.status == Guest.VISITED:
+                        return Response({
+                            'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
+                        },
+                            status=status.HTTP_400_BAD_REQUEST)
+                except Guest.DoesNotExist:
+                    new_user = User.objects.create(
+                        first_name=serializer.validated_data['first_name'],
+                        last_name=serializer.validated_data['last_name'],
+                        email=serializer.validated_data['email'],
+                        username=serializer.validated_data['email'].partition('@')[0]
+                    )
+                    guest = Guest.objects.create(event=event, person=new_user, status=Guest.REGISTERED)
+
                 guest.status = Guest.VISITED
                 guest.save()
                 imgstr64 = serializer.validated_data['image']
