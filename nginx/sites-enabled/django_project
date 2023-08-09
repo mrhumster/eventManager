@@ -17,7 +17,7 @@ server {
 
     location /media {
         autoindex on;
-        alias /backend/media/;
+        alias /media/;
     }
 
     location / {
