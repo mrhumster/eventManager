@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-1k$jlyn5qu7b8%gq^&9hv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'NO').lower() in ('on', 'true', 'y', 'yes')
 
-ALLOWED_HOSTS = ['localhost', '192.168.100.21']
+ALLOWED_HOSTS = ['localhost', 'event.vniigaz.local', '192.168.100.21']
 
 
 # Application definition
@@ -221,7 +221,7 @@ SITE_SCHEMA = 'https'    # http/https?
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-CSRF_TRUSTED_ORIGINS = ['https://base', 'https://base.vniigaz.local', 'https://192.168.100.21', 'https://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://event', 'https://event.vniigaz.local', 'https://192.168.100.21', 'https://localhost']
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
