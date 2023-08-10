@@ -58,8 +58,8 @@ const app = Vue.createApp({
     },
     template: `
 <div class="card shadow mt-3" style="height: 95%">
-  <div class="card-header text-center">
-    <h5 class="fw-light pt-1">Задачи на мероприятие: <a class="link-primary link-offset-3" href="/${event.id}">[[ event.title ]]</a></h5>
+  <div class="card-header bg-gradient bg-primary text-light  text-center">
+    <h5 class="fw-light pt-1">Задачи на мероприятие: <a class="link-light link-offset-3" href="/${event.id}">[[ event.title ]]</a></h5>
   </div>
   <div class="card-body p-1 d-flex">
     <task-list></task-list>
@@ -152,8 +152,8 @@ app.component('task-list', {
 
 app.component('filter-executor', {
     template: `
-<div class="d-grid gap-2 text-center pt-2">
-  <div class="form-check form-switch ms-5">
+<div class="d-grid gap-2 text-center pt-2 shadow border border-primary rounded-2 mt-3 py-1 mx-3">
+  <div class="form-check form-switch ms-3">
     <input v-model="this.$root.only_my_tasks" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
     <label class="form-check-label" for="flexSwitchCheckDefault">Только мои задачи</label>
   </div>
