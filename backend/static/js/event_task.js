@@ -156,16 +156,16 @@ app.component('filter-status', {
     <!--<div class="fw-light pt-1">Фильтр задач по статусу</div> -->
     <div class="btn-group shadow mx-3" role="group" aria-label="Radio group filter by status">
       <input @click="onClickHandler($event)" type="radio" class="btn-check" name="btnradio" id="btnradio1" value="NEW" autocomplete="off" checked> 
-      <label class="btn btn-outline-primary" for="btnradio1" title="Новые задачи"><i class="bi bi-person-up"></i></label>
+      <label class="btn btn-outline-primary" for="btnradio1" title="Новые задачи"><i class="bi bi-asterisk"></i></label>
     
       <input @click="onClickHandler($event)" type="radio" class="btn-check" name="btnradio" id="btnradio2" VALUE="PROGRESS" autocomplete="off">
-      <label class="btn btn-outline-primary" for="btnradio2" title="Задачи в работе"><i class="bi bi-person-lock"></i></label>
+      <label class="btn btn-outline-primary" for="btnradio2" title="Задачи в работе"><i class="bi bi-hourglass-split"></i></label>
     
       <input @click="onClickHandler($event)" type="radio" class="btn-check" name="btnradio" id="btnradio3" value="CLOSED" autocomplete="off">
-      <label class="btn btn-outline-primary" for="btnradio3" title="Завершенные задачи"><i class="bi bi-person-check"></i></label>
+      <label class="btn btn-outline-primary" for="btnradio3" title="Завершенные задачи"><i class="bi bi-check2-square"></i></label>
       
       <input @click="onClickHandler($event)" type="radio" class="btn-check" name="btnradio" id="btnradio4" value="CANCEL" autocomplete="off">
-      <label class="btn btn-outline-primary" for="btnradio4" title="Отмененные задачи"><i class="bi bi-person-slash"></i></label>
+      <label class="btn btn-outline-primary" for="btnradio4" title="Отмененные задачи"><i class="bi bi-trash"></i></label>
     </div>
 </div>
     `,
@@ -248,12 +248,6 @@ app.component('task-detail', {
     data() {
         return {
             task: null,
-            status: {
-                'NEW': 'Новая задача',
-                'PROGRESS': 'Задача в работе',
-                'CLOSED': 'Задача закрыта',
-                'CANCEL': 'Задача отменена'
-            },
             description: {
                 // TODO: Вынести все эти описания на бэк
                 'MERCH': 'Выдать раздаточный материал'
@@ -279,7 +273,7 @@ app.component('task-detail', {
     template: `
 <div class="card shadow ms-3" v-if="task" style="width: 24rem;">
   <div class="card-header text-center">
-    <p class="card-title fw-light pt-2" >[[ status[task.status]  ]]</p>
+    <p class="card-title fw-light pt-2"><task-status :status="task.status"></task-status></p>
   </div>
   <div class="card-body d-flex flex-column">
     <h5 class="card-text fw-light text-center flex-grow-1">[[ description[task.description] ]]</h5>
@@ -337,7 +331,7 @@ app.component('task-executor', {
         }
     },
     template: `
-    <div v-if="guest"><i class="bi bi-person-gear pe-2"></i>
+    <div v-if="guest"><i class="bi bi-person-circle pe-2"></i>
       <a class="link-primary link-offset-3" :href="guest.link_to_profile">[[ guest.person.first_name ]] [[ guest.person.last_name ]]</a>
     </div>
     `
@@ -392,5 +386,14 @@ app.component('guest', {
     }
 })
 
+app.component('task-status', {
+    props: ['status'],
+    template: `
+<span v-if="status == 'NEW'"><i class="bi bi-asterisk pe-2"></i>Новая задача</span>
+<span v-if="status == 'PROGRESS'"><i class="bi bi-hourglass-split pe-2"></i>В работе</span>
+<span v-if="status == 'CLOSED'"><i class="bi bi-check2-square pe-2"></i>Закрыта</span>
+<span v-if="status == 'CANCEL'"><i class="bi bi-trash pe-2"></i></i>Отменена</span>
+    `
+})
 
 app.mount('#app')

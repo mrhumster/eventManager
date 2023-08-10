@@ -39,8 +39,8 @@ def guest_icon(value):
         case 'REGISTERED':
             return '<i class="bi bi-person-fill text-primary pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Пользователь зарегистрирован"></i>'
         case 'REFUSED':
-            return f'<i class="bi bi-person-fill-slash text-secondary pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Регистрация отменена"></i>'
+            return f'<i class="bi bi-person-x text-secondary pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Регистрация отменена"></i>'
         case 'VISITED':
-            return f'<i class="bi bi-person-fill-check text-success pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Посетил мероприятие"></i>'
+            return f'<i class="bi bi-person-check text-success pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Посетил мероприятие"></i>'
 
     return value

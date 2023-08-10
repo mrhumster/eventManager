@@ -2,9 +2,7 @@ import datetime
 
 from django import forms
 
-from events import logger
 from events.models import Event, Guest
-from events.validators import guest_email_validator
 
 
 class EventForm(forms.ModelForm):
