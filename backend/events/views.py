@@ -31,7 +31,7 @@ class ListEventView(ListView):
     context_object_name = 'events'
 
     def get_queryset(self):
-        return Event.objects.all().filter(end_date__gt=datetime.date.today())
+        return Event.objects.all().filter(end_date__gte=datetime.date.today())
 
 
 class NewEventView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -305,7 +305,7 @@ class GuestViewSet(ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated, IsAdminUser]
 
-    @action(methods=['post'], detail=False)
+    @action(methods=['post', 'get'], detail=False)
     def visit(self, request):
         if request.method == 'POST':
             serializer = VisitSerializer(data=request.data)

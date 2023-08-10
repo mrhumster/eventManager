@@ -1,5 +1,8 @@
+import datetime
+
 from django import forms
 
+from events import logger
 from events.models import Event, Guest
 from events.validators import guest_email_validator
 
@@ -28,6 +31,18 @@ class EventForm(forms.ModelForm):
         'class': 'form-control',
         'type': 'date'
     }))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
+        if datetime.datetime.combine(start_date, start_time) > datetime.datetime.combine(end_date, end_time):
+            msg = 'Начало мероприятия не может быть раньше конца мероприятия'
+            self.add_error('start_date', msg)
+            self.add_error('start_time', msg)
 
 
 class GuestForm(forms.ModelForm):
