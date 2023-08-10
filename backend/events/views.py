@@ -284,7 +284,7 @@ class EventViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(instance)
+        serializer = self.get_serializer(instance, context={'request': request})
         etag = request.headers.get('ETag', '')
         last_modified = parse_datetime(etag)
         if last_modified == instance.change_time:

@@ -135,7 +135,7 @@ app.component('task-list', {
 <div class="w-25" style="height: 99%;">
   <div class="border rounded-1" style="height: 100%;">
     <filter-status></filter-status>
-    <filter-executor v-if="this.$root.current_status_filter != 'NEW'"></filter-executor>
+    <!--<filter-executor v-if="this.$root.current_status_filter != 'NEW'"></filter-executor>-->
     <hr>
     <div class="d-flex flex-column align-item-stretch mt-2" style="height: 666px; overflow-y: auto; overflow-x: hidden">
       <task v-for="task in this.$root.event.tasks"
@@ -205,9 +205,9 @@ app.component('task', {
     <button class="btn btn-outline-primary shadow mx-3 my-1" 
             @click="set_current_task" 
             v-if="task.status == statusFilter">
-      <small><span class="badge bg-primary">[[ task.status ]]</span></small><br>
+      <!--<small><span class="badge bg-primary">[[ task.status ]]</span></small><br>-->
       <span class="text-muted">[[ this.$root.task_descriptions[task.description] ]]</span><br> 
-      <span v-if="this.guest">[[ this.guest.person.first_name ]] [[ this.guest.person.last_name ]]</span>
+      <small><span v-if="this.guest">[[ this.guest.person.first_name ]] [[ this.guest.person.last_name ]]</span></small>
     </button>
     </transition>
     `,
