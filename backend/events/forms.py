@@ -14,7 +14,8 @@ class EventForm(forms.ModelForm):
 
     start_time = forms.TimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'type': 'time'
+        'type': 'time',
+        'value': '08:00'
     }), label='Начало мероприятия')
 
     start_date = forms.DateField(widget=forms.TextInput(attrs={
@@ -24,7 +25,8 @@ class EventForm(forms.ModelForm):
 
     end_time = forms.TimeField(widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'type': 'time'
+        'type': 'time',
+        'value': '20:00'
     }), label='Окончание мероприятия')
 
     end_date = forms.DateField(widget=forms.TextInput(attrs={
