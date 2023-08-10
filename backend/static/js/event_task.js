@@ -358,7 +358,7 @@ app.component('guest', {
   <img v-if="guest.image" :src="guest.image" class="card-img-top" alt="...">
   <div class="card-body" v-if="guest">
     <h5 class="card-text">[[ guest.person.first_name ]] [[ guest.person.last_name ]]</h5>
-    <a class="link-primary" href="mailto:[[guest.person.email]]">[[ guest.person.email ]]</a>
+    <!--<a class="link-primary" href="mailto:[[guest.person.email]]">[[ guest.person.email ]]</a>-->
     <div class="row" v-if="guest.registered_time">
       <div class="col-5 text-end text-muted">Зарегистрирован</div>
       <div class="col-7">[[ guest.registered_time ]]</div>
