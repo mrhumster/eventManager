@@ -92,6 +92,17 @@ app.component("task-control-panel", {
           type="button">
           <i class="bi bi-hand-thumbs-up pe-2"></i>Забрать себе [[ user_id ]]
   </button>
+  <button class="btn btn-outline-success me-md-2 shadow" 
+          @click="setTaskStatus('CANCEL')" 
+          v-if="current_task.status != 'CANCEL'"  type="button">
+          <i class="bi bi-trash pe-2"></i>Отменить
+  </button>
+  <button class="btn btn-outline-success me-md-2 shadow" 
+          @click="setTaskStatus('NEW')" 
+          v-if="current_task.status == 'CANCEL'"  type="button">
+          <i class="bi bi-recycle pe-2"></i>Восстановить
+  </button>
+  
 </div>
     `,
     methods: {
