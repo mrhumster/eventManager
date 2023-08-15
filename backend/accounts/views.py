@@ -267,7 +267,7 @@ def userprofile_view(request, username):
     match request.method:
         case 'GET':
             user = get_object_or_404(User, username=username)
-            return render(request, 'accounts/user_profile.html', {'user':  user})
+            return render(request, 'accounts/user_profile.html', {'profile':  user})
 
 
 @login_required
