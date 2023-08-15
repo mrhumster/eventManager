@@ -321,7 +321,7 @@ class GuestViewSet(ModelViewSet):
                         return Response({
                             'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
                         },
-                            status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_200_OK)
                 except Guest.DoesNotExist:
                     new_user, _ = User.objects.get_or_create(
                         first_name=serializer.validated_data['first_name'],
