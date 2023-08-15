@@ -323,12 +323,14 @@ class GuestViewSet(ModelViewSet):
                         },
                             status=status.HTTP_400_BAD_REQUEST)
                 except Guest.DoesNotExist:
-                    new_user = User.objects.create(
+                    new_user, _ = User.objects.get_or_create(
                         first_name=serializer.validated_data['first_name'],
                         last_name=serializer.validated_data['last_name'],
                         email=serializer.validated_data['email'],
                         username=serializer.validated_data['email'].partition('@')[0]
                     )
+                    if _:
+                        logger.info(f'Создан новый пользователь: {new_user}')
                     guest = Guest.objects.create(event=event, person=new_user, status=Guest.REGISTERED)
 
                 guest.status = Guest.VISITED
