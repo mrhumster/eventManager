@@ -48,5 +48,5 @@ class VisitSerializer(serializers.Serializer):
     event_id = serializers.IntegerField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
-    image = serializers.CharField()
+    image = serializers.CharField(required=False)
     email = serializers.EmailField()
