@@ -317,11 +317,12 @@ class GuestViewSet(ModelViewSet):
                                           person__email=serializer.validated_data['email'],
                                           event=event,
                                           person__is_staff=False)
+                    logger.info(guest)
                     if guest.status == Guest.VISITED:
                         return Response({
                             'message': f'{guest.person.first_name} {guest.person.last_name} уже проходил на мероприятие {guest.event.title}'
                         },
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_400_BAD_REQUEST)
                 except Guest.DoesNotExist:
                     new_user, _ = User.objects.get_or_create(
                         first_name=serializer.validated_data['first_name'],
