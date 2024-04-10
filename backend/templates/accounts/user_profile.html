@@ -12,7 +12,7 @@
             <h5 class="card-title pt-3 ps-4">{{ profile.first_name }} {{ profile.last_name }}</h5>
             <a class="link-light text-decoration-none ps-4 mb-2" href="mailto:{{ profile.email }}"><i class="bi bi-envelope pe-1"></i> {{ profile.email }}</a>
                 <div class="card-text ps-4 mt-2">
-                    {% for group in profile.groups.all %}
+                    {% for group in profile.                                                                                                                                                                                                                                                                                                                                                                                                    groups.all %}
                         <span class="badge bg-light text-primary">{{ group }}</span>
                     {% endfor %}
                 </div>
